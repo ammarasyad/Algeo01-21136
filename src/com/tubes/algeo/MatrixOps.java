@@ -216,7 +216,7 @@ final class MatrixOps {
      * @return Array of solutions.
      */
     private double[] cramer(double[][] m) {
-        double[] solutions = new double[m.length], constants = new double[m.length];;
+        double[] solutions = new double[m.length], constants = new double[m.length];
         double[][] row = new double[m.length][m.length];
 
         int determinant = determinant(row);

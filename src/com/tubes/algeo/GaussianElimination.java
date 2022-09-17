@@ -28,7 +28,10 @@ final class GaussianElimination {
      * @return Row echelon matrix. null if determinant is 0. Returns null if the matrix has either infinite or no solutions.
      */
     public BigDecimal[][] gauss(int[][] m) {
-        return gauss(matrixOps.convertToDouble(m));
+        double[][] row = new double[m.length][m.length];
+        double[] constants = new double[m.length];
+        matrixOps.prepareMatrix(matrixOps.convertToDouble(m), row, constants);
+        return gauss(row, constants);
     }
 
     /**
@@ -41,12 +44,9 @@ final class GaussianElimination {
         return gaussJordan(matrixOps.convertToDouble(m));
     }
 
-    private BigDecimal[][] gauss(double[][] m) {
-        int length = m.length;
-        double[][] row = new double[length][length];
-        double[] constants = new double[length];
+    private BigDecimal[][] gauss(double[][] row, double[] constants) {
+        int length = row.length;
 
-        matrixOps.prepareMatrix(m, row, constants);
         if (matrixOps.determinant(row) == 0) {
             return null;
         }
