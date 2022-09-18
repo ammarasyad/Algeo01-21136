@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 final class GaussianElimination {
-    public static final double EPSILON = 1e-10;
+    private static final double EPSILON = 1e-9;
     private static int count = 0;
-    private static final MatrixOps matrixOps = MatrixOps.getInstance();
+    private static final MatrixOps mOps = MatrixOps.getInstance();
 
     private static GaussianElimination INSTANCE = null;
 
@@ -28,9 +28,10 @@ final class GaussianElimination {
      * @return Row echelon matrix. null if determinant is 0. Returns null if the matrix has either infinite or no solutions.
      */
     public BigDecimal[][] gauss(int[][] m) {
-        double[][] row = new double[m.length][m.length];
+        double[][] row = new double[m.length][m[0].length - 1];
         double[] constants = new double[m.length];
-        matrixOps.prepareMatrix(matrixOps.convertToDouble(m), row, constants);
+        mOps.prepareMatrix(mOps.convertToDouble(m), row, constants);
+
         return gauss(row, constants);
     }
 
@@ -41,15 +42,11 @@ final class GaussianElimination {
      * @return Reduced row echelon matrix. Returns null if the matrix has either infinite or no solutions.
      */
     public BigDecimal[][] gaussJordan(int[][] m) {
-        return gaussJordan(matrixOps.convertToDouble(m));
+        return gaussJordan(mOps.convertToDouble(m));
     }
 
     private BigDecimal[][] gauss(double[][] row, double[] constants) {
         int length = row.length;
-
-        if (matrixOps.determinant(row) == 0) {
-            return null;
-        }
         for (int i = 0; i < length; i++) {
             int max = i;
             for (int j = i + 1; j < length; j++) {
@@ -66,6 +63,7 @@ final class GaussianElimination {
             constants[max] = t;
 
             for (int j = i + 1; j < length; j++) {
+                if (Math.abs(row[i][i]) < EPSILON) continue;
                 double x = row[j][i] / row[i][i];
                 constants[j] -= x * constants[i];
                 row[j] = rowSubtract(row[j], rowMultiply(row[i], x));
@@ -80,15 +78,17 @@ final class GaussianElimination {
             x[i] = (constants[i] - sum) / row[i][i];
         }
 
-        double[][] finalized = matrixOps.combineMatrix(row, constants);
+        double[][] finalized = mOps.combineMatrix(row, constants);
 
         for (int i = 0; i < length; i++) {
             if (finalized[i][i] == 1) continue;
 
-            if (finalized[i][i] > 1 || finalized[i][i] < 0) {
-                finalized[i] = rowDivide(finalized[i], finalized[i][i]);
-            } else if (row[i][i] < 1 && row[i][i] > 0) {
-                finalized[i] = rowMultiply(finalized[i], 1 / finalized[i][i]);
+            if (!(Math.abs(finalized[i][i]) < EPSILON)) {
+                if ((finalized[i][i] > 1 || finalized[i][i] < 0) ) {
+                    finalized[i] = rowDivide(finalized[i], finalized[i][i]);
+                } else if ((finalized[i][i] < 1 && finalized[i][i] > 0)) {
+                    finalized[i] = rowMultiply(finalized[i], 1 / finalized[i][i]);
+                }
             }
         }
         return convertToBD(finalized);
@@ -110,6 +110,7 @@ final class GaussianElimination {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
                 if (Double.isNaN(finalized[i][j]) || Double.isInfinite(finalized[i][j])) {
+                    System.out.println("Matrix does not have a unique solution.");
                     return null;
                 }
             }
@@ -118,9 +119,9 @@ final class GaussianElimination {
     }
 
     private BigDecimal[][] convertToBD(double[][] finalized) {
-        BigDecimal[][] result = new BigDecimal[finalized.length][finalized.length + 1];
+        BigDecimal[][] result = new BigDecimal[finalized.length][finalized[0].length];
         for (int i = 0; i < result.length; i++) {
-            for (int j = 0; j <= result.length; j++) {
+            for (int j = 0; j < result[0].length; j++) {
                 result[i][j] = BigDecimal.valueOf(finalized[i][j]);
                 result[i][j] = result[i][j].setScale(3, RoundingMode.HALF_UP);
             }

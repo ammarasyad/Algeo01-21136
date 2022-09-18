@@ -1,5 +1,6 @@
 package com.tubes.algeo;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
@@ -26,8 +27,8 @@ final class MatrixOps {
      * @param constants    Array of constants.
      */
     public void prepareMatrix(double[][] m, double[][] coefficients, double[] constants) {
-        int length = m.length;
-        for (int i = 0; i < length; i++) {
+        int length = m[0].length - 1;
+        for (int i = 0; i < m.length; i++) {
             System.arraycopy(m[i], 0, coefficients[i], 0, length);
             constants[i] = m[i][length];
         }
@@ -35,10 +36,11 @@ final class MatrixOps {
 
     public double[][] combineMatrix(double[][] coefficients, double[] constants) {
         int length = coefficients.length;
-        double[][] result = new double[length][length + 1];
+        int row = coefficients[0].length;
+        double[][] result = new double[length][row + 1];
         for (int i = 0; i < length; i++) {
-            System.arraycopy(coefficients[i], 0, result[i], 0, length);
-            result[i][length] = constants[i];
+            System.arraycopy(coefficients[i], 0, result[i], 0, row);
+            result[i][row] = constants[i];
         }
         return result;
     }
@@ -123,7 +125,6 @@ final class MatrixOps {
         }
         return result;
     }
-
 
     /**
      * Returns the adjugate matrix. Cofactor of the matrix will be calculated automatically, no need to pass the cofactor matrix to the params.
