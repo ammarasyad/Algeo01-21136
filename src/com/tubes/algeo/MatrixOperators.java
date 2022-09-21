@@ -1,13 +1,10 @@
 package com.tubes.algeo;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-final class MatrixOperators {
+public final class MatrixOperators {
     private static MatrixOperators INSTANCE = null;
     private static final double EPSILON = 1e-9;
     private static int count = 0;
@@ -25,17 +22,48 @@ final class MatrixOperators {
         return INSTANCE;
     }
 
-    /**
-     * Separates the augmented matrix (A|B) to a matrix of coefficients (A) and an array of constants (B).
-     *
-     * @param coeff Matrix of coefficients.
-     * @param rhs   Matrix of right hand side constants.
-     */
-    public Matrix<Double> prepareMatrix(Matrix<Double> coeff, Matrix<Double> rhs) {
-        List<List<Double>> listCoeff = coeff.getMatrix();
-        List<List<Double>> listRHS = rhs.getMatrix();
-        return new Matrix<>(coeff.getRow(), rhs.getCol(), Stream.concat(listCoeff.stream(), listRHS.stream()).toList());
+    public DoubleMatrix addMatrix(DoubleMatrix m1, DoubleMatrix m2) {
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        for (int i = 0; i < m1.getRow(); i++) {
+            result.setRowElements(i, rowAdd(m1.getRowElements(i), m2.getRowElements(i)));
+        }
+        return result;
     }
+
+    public DoubleMatrix subtractMatrix(DoubleMatrix m1, DoubleMatrix m2) {
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        for (int i = 0; i < m1.getRow(); i++) {
+            result.setRowElements(i, rowSubtract(m1.getRowElements(i), m2.getRowElements(i)));
+        }
+        return result;
+    }
+
+    public DoubleMatrix multiplyMatrix(DoubleMatrix m1, double multiplier) {
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        for (int i = 0; i < m1.getRow(); i++) {
+            result.setRowElements(i, rowMultiply(m1.getRowElements(i), multiplier));
+        }
+        return result;
+    }
+
+    public DoubleMatrix divideMatrix(DoubleMatrix m1, double divisor) {
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        for (int i = 0; i < m1.getRow(); i++) {
+            result.setRowElements(i, rowDivide(m1.getRowElements(i), divisor));
+        }
+        return result;
+    }
+//    /**
+//     * Separates the augmented matrix (A|B) to a matrix of coefficients (A) and an array of constants (B).
+//     *
+//     * @param coeff Matrix of coefficients.
+//     * @param rhs   Matrix of right hand side constants.
+//     */
+//    public DoubleMatrix prepareMatrix(DoubleMatrix coeff, DoubleMatrix rhs) {
+//        List<List<Double>> listCoeff = coeff.getMatrix();
+//        List<List<Double>> listRHS = rhs.getMatrix();
+//        return new DoubleMatrix(coeff.getRow(), rhs.getCol(), Stream.concat(listCoeff.stream(), listRHS.stream()).toList());
+//    }
 
     /**
      * Gets the cofactor of a square matrix.
@@ -43,13 +71,14 @@ final class MatrixOperators {
      * @param m The original matrix.
      * @return Cofactor of the matrix.
      */
-    public Matrix<Double> cofactor(Matrix<Double> m) {
-        Matrix<Double> cofactor = new Matrix<>(m.getRow());
+    public DoubleMatrix cofactor(DoubleMatrix m) {
+        DoubleMatrix copy = checkMatrix(m);
+        DoubleMatrix cofactor = new DoubleMatrix(copy.getRow());
         List<List<Double>> list = cofactor.getMatrix();
 
-        for (int i = 0; i < m.getRow(); i++) {
-            for (int j = 0; j < m.getRow(); j++) {
-                list.get(i).set(j, (int) Math.pow(-1, i + j) * determinant(removeRowCols(m, i, j)));
+        for (int i = 0; i < copy.getRow(); i++) {
+            for (int j = 0; j < copy.getRow(); j++) {
+                list.get(i).set(j, (int) Math.pow(-1, i + j) * determinant(removeRowCols(copy, i, j)));
             }
         }
 
@@ -63,20 +92,21 @@ final class MatrixOperators {
      * @return Determinant of said matrix.
      * @throws ArithmeticException if the matrix is non-square.
      */
-    public double determinant(Matrix<Double> m) {
-        if (m.getRow() != m.getCol()) {
+    public double determinant(Matrix<? extends Number> m) {
+        DoubleMatrix copy = checkMatrix(m);
+        if (copy.getRow() != copy.getCol()) {
             throw new ArithmeticException("Matrix is non-square.");
         }
 
-        if (m.getRow() == 1) {
-            return m.getElement(0, 0);
-        } else if (m.getRow() == 2) {
-            return m.getElement(0, 0) * m.getElement(1, 1) - m.getElement(0, 1) * m.getElement(1, 0);
+        if (copy.getRow() == 1) {
+            return copy.getElement(0, 0);
+        } else if (copy.getRow() == 2) {
+            return copy.getElement(0, 0) * copy.getElement(1, 1) - copy.getElement(0, 1) * copy.getElement(1, 0);
         }
 
         double result = 0.0;
-        for (int i = 0; i < m.getRow(); i++) {
-            result += Math.pow(-1, i) * m.getElement(0, i) * determinant(removeRowCols(m, 0, i));
+        for (int i = 0; i < copy.getRow(); i++) {
+            result += Math.pow(-1, i) * copy.getElement(0, i) * determinant(removeRowCols(copy, 0, i));
         }
         return result;
     }
@@ -87,8 +117,8 @@ final class MatrixOperators {
      * @param m The original matrix.
      * @return Adjugate (Transpose of the cofactor) of a matrix.
      */
-    public Matrix<Double> adjugate(Matrix<Double> m) {
-        return transpose(cofactor(m));
+    public DoubleMatrix adjugate(Matrix<? extends Number> m) {
+        return transpose(cofactor(checkMatrix(m)));
     }
 
     /**
@@ -97,11 +127,12 @@ final class MatrixOperators {
      * @param m The original matrix.
      * @return Transposed matrix.
      */
-    public Matrix<Double> transpose(Matrix<Double> m) {
-        Matrix<Double> temp = new Matrix<>(m.getRow());
+    public DoubleMatrix transpose(Matrix<? extends Number> m) {
+        DoubleMatrix copy = checkMatrix(m);
+        DoubleMatrix temp = new DoubleMatrix(m.getRow());
         for (int i = 0; i < m.getRow(); i++) {
             for (int j = 0; j < m.getCol(); j++) {
-                temp.setElement(j, i, m.getElement(i, j));
+                temp.setElement(j, i, copy.getElement(i, j));
             }
         }
         return temp;
@@ -113,19 +144,30 @@ final class MatrixOperators {
      * @param m The original matrix.
      * @return Inverse of the matrix. NULL if inverse does not exist.
      */
-    public Matrix<Double> inverse(Matrix<Double> m) {
-        if (doesInverseExist(m)) {
-            Matrix<Double> inverse = new Matrix<>(m.getRow());
-            double determinant = determinant(m);
+    public DoubleMatrix inverse(Matrix<? extends Number> m) {
+        DoubleMatrix copy = checkMatrix(m);
+        if (doesInverseExist(copy)) {
+            DoubleMatrix inverse = new DoubleMatrix(copy.getRow());
+            double determinant = determinant(copy);
             DecimalFormat df = new DecimalFormat("###.##");
-            for (int i = 0; i < m.getRow(); i++) {
-                for (int j = 0; j < m.getCol(); j++) {
-                    inverse.setElement(i, j, Double.parseDouble(df.format(adjugate(m).getMatrix().get(i).get(j) / determinant)));
+            for (int i = 0; i < copy.getRow(); i++) {
+                for (int j = 0; j < copy.getCol(); j++) {
+                    inverse.setElement(i, j, Double.parseDouble(df.format(adjugate(copy).getMatrix().get(i).get(j) / determinant)));
                 }
             }
             return inverse;
         }
         return null;
+    }
+
+    private DoubleMatrix checkMatrix(Matrix<? extends Number> m) {
+        DoubleMatrix copy;
+        if (m instanceof IntegerMatrix) {
+            copy = Matrix.convertToDouble(m);
+        } else {
+            copy = (DoubleMatrix) m;
+        }
+        return copy;
     }
 
     /**
@@ -136,8 +178,8 @@ final class MatrixOperators {
      * @param col The column to remove.
      * @return N-1 x N-1 matrix.
      */
-    private Matrix<Double> removeRowCols(Matrix<Double> m, int row, int col) {
-        Matrix<Double> temp = new Matrix<>(m.getRow() - 1);
+    private DoubleMatrix removeRowCols(DoubleMatrix m, int row, int col) {
+        DoubleMatrix temp = new DoubleMatrix(m.getRow() - 1);
         int k = 0, l = 0;
         for (int i = 0; i < m.getRow(); i++) {
             if (i == row) continue;
@@ -158,16 +200,17 @@ final class MatrixOperators {
      * @param m An (N + 1) x N matrix, the rightmost being the constants.
      * @return Array of solutions.
      */
-    public double[] cramer(Matrix<Double> m) {
-        if (!doesInverseExist(m)) return null;
-        double[] results = new double[m.getRow()];
-        double determinant = determinant(m.getLHS());
-        double[] rhs = m.getRHS();
+    public double[] cramer(Matrix<? extends Number> m) {
+        DoubleMatrix copy = checkMatrix(m);
+        if (!doesInverseExist(copy)) return null;
+        double[] results = new double[copy.getRow()];
+        double determinant = determinant(copy.getLHS());
+        double[] rhs = copy.getRHS();
 
-        for (int i = 0; i < m.getRow(); i++) {
-            Matrix<Double> temp = new Matrix<>(m.getRow(), m.getCol(), m.getMatrix());
-            temp = temp.getLHS();
-            for (int j = 0; j < m.getCol(); j++) {
+        for (int i = 0; i < copy.getRow(); i++) {
+            DoubleMatrix temp = new DoubleMatrix(copy.getRow(), copy.getCol(), copy.getMatrix());
+            temp = (DoubleMatrix) temp.getLHS();
+            for (int j = 0; j < copy.getCol(); j++) {
                 temp.setElement(j, i, rhs[j]);
             }
             results[i] = determinant(temp) / determinant;
@@ -181,7 +224,7 @@ final class MatrixOperators {
      * @param m The original matrix
      * @return TRUE - determinant is non-zero. FALSE - determinant is zero.
      */
-    private boolean doesInverseExist(Matrix<Double> m) {
+    private boolean doesInverseExist(DoubleMatrix m) {
         return determinant(m) != 0;
     }
 
@@ -191,75 +234,64 @@ final class MatrixOperators {
      * @param m Matrix of integer elements.
      * @return Row echelon matrix. null if determinant is 0. Returns null if the matrix has either infinite or no solutions.
      */
-    public Matrix<Double> gauss(Matrix<Double> m) {
-        return gauss(m.getLHS(), m.getRHS());
+    public DoubleMatrix gauss(Matrix<? extends Number> m) {
+        Matrix<Double> copy = checkMatrix(m);
+        return gauss(copy.getLHS(), copy.getRHS());
     }
 
-    private Matrix<Double> gauss(Matrix<Double> row, double[] constants) {
-        int length = row.getRow();
+    private DoubleMatrix gauss(Matrix<Double> result, double[] constants) {
+        int length = result.getRow();
         for (int i = 0; i < length; i++) {
             int max = i;
             for (int j = i + 1; j < length; j++) {
-                if (Math.abs(row.getElement(j, i)) > Math.abs(row.getElement(max, i))) {
+                if (Math.abs(result.getElement(j, i)) > Math.abs(result.getElement(max, i))) {
                     max = j;
                 }
             }
-            Collections.swap(row.getMatrix(), i, max);
+            Collections.swap(result.getMatrix(), i, max);
             double t = constants[i];
             constants[i] = constants[max];
             constants[max] = t;
 
             for (int j = i + 1; j < length; j++) {
-                if (Math.abs(row.getElement(i, i)) < EPSILON) continue;
-                double x = row.getElement(j, i) / row.getElement(i, i);
+                if (Math.abs(result.getElement(i, i)) < EPSILON) continue;
+                double x = result.getElement(j, i) / result.getElement(i, i);
                 constants[j] -= x * constants[i];
-//                row[j] = rowSubtract(row[j], rowMultiply(row[i], x));
-                row.setRowElements(j, rowSubtract(row.getRowElements(j), rowMultiply(row.getRowElements(i), x)));
+                result.setRowElements(j, rowSubtract( result.getRowElements(j), rowMultiply(result.getRowElements(i), x)));
             }
         }
         double[] x = new double[length];
         for (int i = length - 1; i >= 0; i--) {
             double sum = 0.0;
             for (int j = i + 1; j < length; j++) {
-                sum += row.getElement(i, j) * x[j];
+                sum += result.getElement(i, j) * x[j];
             }
-            x[i] = (constants[i] - sum) / row.getElement(i, i);
+            x[i] = (constants[i] - sum) / result.getElement(i, i);
         }
 
         for (int i = 0; i < length; i++) {
-            row.getMatrix().get(i).add(constants[i]);
+            result.getMatrix().get(i).add(constants[i]);
         }
 
-//        for (int i = 0; i < length; i++) {
-//            if (finalized[i][i] == 1) continue;
-//
-//            if (!(Math.abs(finalized[i][i]) < EPSILON)) {
-//                if ((finalized[i][i] > 1 || finalized[i][i] < 0)) {
-//                    finalized[i] = rowDivide(finalized[i], finalized[i][i]);
-//                } else if ((finalized[i][i] < 1 && finalized[i][i] > 0)) {
-//                    finalized[i] = rowMultiply(finalized[i], 1 / finalized[i][i]);
-//                }
-//            }
-//        }
         for (int i = 0; i < length; i++) {
-            if (row.getElement(i, i) == 1) continue;
-            if (!(Math.abs(row.getElement(i, i)) < EPSILON)) {
-                if (row.getElement(i, i) > 1 || row.getElement(i, i) < 0) {
-                    row.setRowElements(i, rowDivide(row.getRowElements(i), row.getElement(i, i)));
-                } else if (row.getElement(i, i) > 0 && row.getElement(i, i) < 1) {
-                    row.setRowElements(i, rowMultiply(row.getRowElements(i), 1 / row.getElement(i, i)));
+            if (result.getElement(i, i) == 1) continue;
+            if (!(Math.abs(result.getElement(i, i)) < EPSILON)) {
+                if (result.getElement(i, i) > 1 || result.getElement(i, i) < 0) {
+                    result.setRowElements(i, rowDivide(result.getRowElements(i), result.getElement(i, i)));
+                } else if (result.getElement(i, i) > 0 && result.getElement(i, i) < 1) {
+                    result.setRowElements(i, rowMultiply(result.getRowElements(i), 1 / result.getElement(i, i)));
                 }
             }
 
             if (i == length - 1) {
                 for (int j = 0; j < length + 1; j++) {
-                    if ((row.getElement(i, j)) < EPSILON) {
-                        row.setElement(i, j, 0D);
+                    if ((result.getElement(i, j)) < EPSILON) {
+                        result.setElement(i, j, 0D);
                     }
                 }
             }
         }
-        return row;
+        return new DoubleMatrix(result.getMatrix());
     }
 
     /**
@@ -268,8 +300,8 @@ final class MatrixOperators {
      * @param m Matrix of integer elements.
      * @return Reduced row echelon matrix. Returns null if the matrix has either infinite or no solutions.
      */
-    public Matrix<Double> gaussJordan(Matrix<Double> m) {
-        Matrix<Double> finalized = new Matrix<>(m.getRow(), m.getCol(), m.getMatrix());
+    public DoubleMatrix gaussJordan(DoubleMatrix m) {
+        DoubleMatrix finalized = new DoubleMatrix(m.getRow(), m.getCol(), m.getMatrix());
         int length = m.getRow();
         for (int i = 0; i < length; i++) {
             if (Math.abs(finalized.getElement(i, i)) < EPSILON) {
@@ -293,6 +325,14 @@ final class MatrixOperators {
             }
         }
         return finalized;
+    }
+
+    private ArrayList<Double> rowAdd(Double[] row, Double[] add) {
+        ArrayList<Double> result = new ArrayList<>(row.length);
+        for (int i = 0; i < row.length; i++) {
+            result.add(row[i] + add[i]);
+        }
+        return result;
     }
 
     private ArrayList<Double> rowMultiply(Double[] row, double multiplier) {
@@ -322,7 +362,15 @@ final class MatrixOperators {
         return sub;
     }
 
-    private Matrix<Double> swapRow(Matrix<Double> m, int row) {
+    private ArrayList<Double> rowSubtract(Double[] row, Double[] subtract) {
+        ArrayList<Double> result = new ArrayList<>(row.length);
+        for (int i = 0; i < row.length; i++) {
+            result.add(row[i] - subtract[i]);
+        }
+        return result;
+    }
+
+    private DoubleMatrix swapRow(DoubleMatrix m, int row) {
         count++;
         if (count >= m.getRow() - row) {
             count = 0;
@@ -331,10 +379,8 @@ final class MatrixOperators {
 
         Double[] temp = m.getRowElements(row);
         for (int i = row; i < m.getRow() - 1; i++) {
-//            m[i] = m[i + 1];
             m.setRowElements(i, Arrays.stream(m.getRowElements(i + 1)).collect(Collectors.toCollection(ArrayList::new)));
         }
-//        m[m.length - 1] = temp;
         m.setRowElements(m.getRow() - 1, Arrays.stream(temp).collect(Collectors.toCollection(ArrayList::new)));
         if (m.getElement(row, row) == 0) {
             m = swapRow(m, row);

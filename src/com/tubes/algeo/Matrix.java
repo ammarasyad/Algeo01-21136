@@ -15,7 +15,7 @@ public class Matrix<T> {
      * Non-square non-empty matrix initialization.
      * @param row Number of rows
      * @param col Number of columns
-     * @param x List of lists of any Number type (Matrix of Integer/Float/Double)
+     * @param x List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
      */
     public Matrix(int row, int col, List<List<T>> x) {
         this.row = row;
@@ -51,6 +51,14 @@ public class Matrix<T> {
     }
 
     /**
+     * Non-square non-empty matrix initialization with dimensions of x.
+     * @param x List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
+     */
+    public Matrix(List<List<T>> x) {
+        this(x.size(), x.get(0).size(), x);
+    }
+
+    /**
      * Square empty matrix initialization.
      * @param size NxN
      */
@@ -58,8 +66,8 @@ public class Matrix<T> {
         this(size, size);
     }
 
-    public void printMatrix() {
-        for (List<T> l : getMatrix()) {
+    public static <E> void printMatrix(Matrix<E> m) {
+        for (List<E> l : m.getMatrix()) {
             System.out.println(l);
         }
     }
@@ -114,7 +122,7 @@ public class Matrix<T> {
     }
 
     public void setElement(int row, int col, T element) {
-        getMatrix().get(row).set(col, element);
+        this.getMatrix().get(row).set(col, element);
     }
 
     public void setRowElements(int row, ArrayList<T> element) {
@@ -135,8 +143,37 @@ public class Matrix<T> {
             copy[i] = iterator.next();
             i++;
         }
-
-//        return Arrays.copyOf((T[]) Array.newInstance(Double.class, row), getCol());
         return copy;
+    }
+
+    public static <T extends Number> Matrix<T> getIdentityMatrix(int size) {
+        Matrix<T> matrix = new Matrix<>(size);
+        for (int i = 0; i < size; i++) {
+            matrix.setElement(i, i, (T) Double.valueOf(1));
+        }
+        return matrix;
+    }
+
+    public static IntegerMatrix convertToInteger(Matrix<? extends Number> m) {
+        List<List<Integer>> copyList = new ArrayList<>(m.getRow());
+        for (int i = 0; i < m.getRow(); i++) {
+            copyList.add(new ArrayList<>(m.getCol()));
+            for (int j = 0; j < m.getCol(); j++) {
+                copyList.get(i).add(j, m.getElement(i, j).intValue());
+            }
+        }
+        return new IntegerMatrix(m.getRow(), m.getCol(), copyList);
+    }
+
+
+    public static DoubleMatrix convertToDouble(Matrix<? extends Number> m) {
+        List<List<Double>> copyList = new ArrayList<>(m.getRow());
+        for (int i = 0; i < m.getRow(); i++) {
+            copyList.add(new ArrayList<>(m.getCol()));
+            for (int j = 0; j < m.getCol(); j++) {
+                copyList.get(i).add(j, m.getElement(i, j).doubleValue());
+            }
+        }
+        return new DoubleMatrix(m.getRow(), m.getCol(), copyList);
     }
 }
