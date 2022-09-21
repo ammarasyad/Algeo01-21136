@@ -16,7 +16,8 @@ public class MatrixReader {
 
     private static MatrixReader INSTANCE = null;
 
-    private MatrixReader() { }
+    private MatrixReader() {
+    }
 
     public static MatrixReader getInstance() {
         if (INSTANCE == null) INSTANCE = new MatrixReader();

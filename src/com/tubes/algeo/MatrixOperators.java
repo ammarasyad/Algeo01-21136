@@ -257,7 +257,7 @@ public final class MatrixOperators {
                 if (Math.abs(result.getElement(i, i)) < EPSILON) continue;
                 double x = result.getElement(j, i) / result.getElement(i, i);
                 constants[j] -= x * constants[i];
-                result.setRowElements(j, rowSubtract( result.getRowElements(j), rowMultiply(result.getRowElements(i), x)));
+                result.setRowElements(j, rowSubtract(result.getRowElements(j), rowMultiply(result.getRowElements(i), x)));
             }
         }
         double[] x = new double[length];

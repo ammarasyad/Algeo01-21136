@@ -13,9 +13,10 @@ public class Matrix<T> {
 
     /**
      * Non-square non-empty matrix initialization.
+     *
      * @param row Number of rows
      * @param col Number of columns
-     * @param x List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
+     * @param x   List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
      */
     public Matrix(int row, int col, List<List<T>> x) {
         this.row = row;
@@ -43,6 +44,7 @@ public class Matrix<T> {
 
     /**
      * Non-square empty matrix initialization.
+     *
      * @param row Number of rows
      * @param col Number of columns
      */
@@ -52,6 +54,7 @@ public class Matrix<T> {
 
     /**
      * Non-square non-empty matrix initialization with dimensions of x.
+     *
      * @param x List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
      */
     public Matrix(List<List<T>> x) {
@@ -60,6 +63,7 @@ public class Matrix<T> {
 
     /**
      * Square empty matrix initialization.
+     *
      * @param size NxN
      */
     public Matrix(int size) {
@@ -93,18 +97,7 @@ public class Matrix<T> {
         for (int i = 0; i < list.size(); i++) {
             rhs[i] = (double) list.get(i);
         }
-         return rhs;
-    }
-
-    public Matrix<T> copyMatrixLHS(Matrix<T> in) {
-        if (in.getRow() == in.getCol()) return in;
-        Matrix<T> temp = new Matrix<>(in.getRow());
-        for (int i = 0; i < in.getRow(); i++) {
-            for (int j = 0; j < in.getCol() - 1; j++) {
-                temp.getMatrix().get(i).set(j, in.getMatrix().get(i).get(j));
-            }
-        }
-        return temp;
+        return rhs;
     }
 
     public Matrix<T> getLHS() {
