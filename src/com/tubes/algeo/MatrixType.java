@@ -3,7 +3,7 @@ package com.tubes.algeo;
 public enum MatrixType {
     UNIQUE, // unique solutions
     INFINITE, // infinitely many solutions
-    NONEXISTENT; // no solutions
+    NO_SOLUTIONS; // no solutions
 
     private static final double EPSILON = 1e-9;
     MatrixType() { }
@@ -21,7 +21,7 @@ public enum MatrixType {
                         && (rhs == 0.0D || Math.abs(rhs) < EPSILON)) {
                     return INFINITE;
                 }
-                return NONEXISTENT;
+                return NO_SOLUTIONS;
             }
         }
         return UNIQUE;

@@ -1,6 +1,6 @@
 package com.tubes.algeo;
 
-interface Operators<T extends Number> {
+interface IOperators<T extends Number> {
     T add(T value1, T value2);
 
     T subtract(T value1, T value2);

@@ -1,26 +1,21 @@
 package com.tubes.algeo;
 
-import javax.xml.stream.events.Characters;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MatrixReader {
+public class MatrixFileOperator {
 
-    private static MatrixReader INSTANCE = null;
+    private static MatrixFileOperator INSTANCE = null;
 
-    private MatrixReader() {
+    private MatrixFileOperator() {
     }
 
-    public static MatrixReader getInstance() {
-        if (INSTANCE == null) INSTANCE = new MatrixReader();
+    public static MatrixFileOperator getInstance() {
+        if (INSTANCE == null) INSTANCE = new MatrixFileOperator();
         return INSTANCE;
     }
 
@@ -35,12 +30,12 @@ public class MatrixReader {
             }
 
             String line = br.readLine();
-            col = line.trim().replaceAll("\\s+", "").length();
-            double[] l;
+            col = line.trim().replaceAll("-?[0-9 ]\\d*(\\.\\d+)?", "1").length();
+            double[] l = new double[col];
 
             List<List<Double>> list = new ArrayList<>((int) row);
             while (line != null) {
-                l = line.trim().replaceAll("\\s+", "").chars().mapToDouble(i -> i - '0').toArray();
+                l = Arrays.stream(line.trim().split("\\s+")).mapToDouble(Double::parseDouble).toArray();
                 list.add(Arrays.stream(l).boxed().toList());
                 line = br.readLine();
             }
@@ -53,5 +48,18 @@ public class MatrixReader {
 
     public IntegerMatrix createIMFromFile(String filename) {
         return Matrix.convertToInteger(createDMFromFile(filename));
+    }
+
+    public void writeMatrixToFile(String filename, DoubleMatrix matrix) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (int i = 0; i < matrix.getRow(); i++) {
+                for (int j = 0; j < matrix.getCol(); j++) {
+                    writer.write(matrix.getElement(i, j) + (j < matrix.getCol() - 1 ? " " : ""));
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

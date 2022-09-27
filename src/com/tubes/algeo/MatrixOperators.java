@@ -1,10 +1,20 @@
 package com.tubes.algeo;
 
-import java.text.DecimalFormat;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public final class MatrixOperators {
+
+    public static final int COFACTOR_EXPANSION = 1;
+    public static final int ROW_REDUCTION = 0;
+
+    public static final int CLASSIC = 69;
+
+    public static final int GAUSS_JORDAN = 420;
     private static MatrixOperators INSTANCE = null;
     private static final double EPSILON = 1e-9;
     private static int count = 0;
@@ -38,10 +48,22 @@ public final class MatrixOperators {
         return result;
     }
 
-    public DoubleMatrix multiplyMatrix(DoubleMatrix m1, double multiplier) {
+    public DoubleMatrix multiplyMatrixByConst(DoubleMatrix m1, double multiplier) {
         DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
             result.setRowElements(i, rowMultiply(m1.getRowElements(i), multiplier));
+        }
+        return result;
+    }
+
+    public DoubleMatrix multiplyMatrixByMatrix(DoubleMatrix m1, DoubleMatrix m2) {
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        for (int i = 0; i < m1.getRow(); i++) {
+            for (int j = 0; j < m1.getCol(); j++) {
+                for (int k = 0; k < m1.getCol(); k++) {
+                    result.setElement(i, j, result.getElement(i, j) + (m1.getElement(i, j) * m2.getElement(k, j)));
+                }
+            }
         }
         return result;
     }
@@ -53,17 +75,6 @@ public final class MatrixOperators {
         }
         return result;
     }
-//    /**
-//     * Separates the augmented matrix (A|B) to a matrix of coefficients (A) and an array of constants (B).
-//     *
-//     * @param coeff Matrix of coefficients.
-//     * @param rhs   Matrix of right hand side constants.
-//     */
-//    public DoubleMatrix prepareMatrix(DoubleMatrix coeff, DoubleMatrix rhs) {
-//        List<List<Double>> listCoeff = coeff.getMatrix();
-//        List<List<Double>> listRHS = rhs.getMatrix();
-//        return new DoubleMatrix(coeff.getRow(), rhs.getCol(), Stream.concat(listCoeff.stream(), listRHS.stream()).toList());
-//    }
 
     /**
      * Gets the cofactor of a square matrix.
@@ -72,7 +83,7 @@ public final class MatrixOperators {
      * @return Cofactor of the matrix.
      */
     public DoubleMatrix cofactor(DoubleMatrix m) {
-        DoubleMatrix copy = checkMatrix(m);
+        DoubleMatrix copy = Matrix.convertToDouble(m);
         DoubleMatrix cofactor = new DoubleMatrix(copy.getRow());
         List<List<Double>> list = cofactor.getMatrix();
 
@@ -92,23 +103,50 @@ public final class MatrixOperators {
      * @return Determinant of said matrix.
      * @throws ArithmeticException if the matrix is non-square.
      */
-    public double determinant(Matrix<? extends Number> m) {
-        DoubleMatrix copy = checkMatrix(m);
-        if (copy.getRow() != copy.getCol()) {
-            throw new ArithmeticException("Matrix is non-square.");
-        }
-
-        if (copy.getRow() == 1) {
-            return copy.getElement(0, 0);
-        } else if (copy.getRow() == 2) {
-            return copy.getElement(0, 0) * copy.getElement(1, 1) - copy.getElement(0, 1) * copy.getElement(1, 0);
-        }
-
-        double result = 0.0;
-        for (int i = 0; i < copy.getRow(); i++) {
-            result += Math.pow(-1, i) * copy.getElement(0, i) * determinant(removeRowCols(copy, 0, i));
+    public double determinant(Matrix<? extends Number> m, int mode) {
+        double result = 0.0d;
+        DoubleMatrix copy = Matrix.convertToDouble(m);
+        switch (mode) {
+            case ROW_REDUCTION -> {
+                result = 1.0d;
+                int switchCount = 0;
+                for (int i = 0; i < copy.getRow(); i++) {
+                    int pivot = i;
+                    for (int j = i + 1; j < copy.getRow(); j++) {
+                        if (Math.abs(copy.getElement(j, i)) > Math.abs(copy.getElement(pivot, i))) {
+                            pivot = j;
+                            switchCount++;
+                        }
+                    }
+                    Collections.swap(copy.getMatrix(), i, pivot);
+                    for (int j = i + 1; j < copy.getRow(); j++) {
+                        double x = copy.getElement(j, i) / copy.getElement(i, i);
+                        copy.setRowElements(j, rowSubtract(copy.getRowElements(j), rowMultiply(copy.getRowElements(i), x)));
+                    }
+                }
+                for (int i = 0; i < copy.getRow(); i++) {
+                    result *= Math.pow(-1, switchCount) * copy.getElement(i, i);
+                }
+            }
+            case COFACTOR_EXPANSION -> {
+                if (copy.getRow() != copy.getCol()) {
+                    throw new ArithmeticException("Matrix is non-square.");
+                }
+                if (copy.getRow() == 1) {
+                    return copy.getElement(0, 0);
+                } else if (copy.getRow() == 2) {
+                    return copy.getElement(0, 0) * copy.getElement(1, 1) - copy.getElement(0, 1) * copy.getElement(1, 0);
+                }
+                for (int i = 0; i < copy.getRow(); i++) {
+                    result += Math.pow(-1, i) * copy.getElement(0, i) * determinant(removeRowCols(copy, 0, i));
+                }
+            }
         }
         return result;
+    }
+
+    public double determinant(Matrix<? extends Number> m) {
+        return determinant(m, COFACTOR_EXPANSION);
     }
 
     /**
@@ -118,7 +156,7 @@ public final class MatrixOperators {
      * @return Adjugate (Transpose of the cofactor) of a matrix.
      */
     public DoubleMatrix adjugate(Matrix<? extends Number> m) {
-        return transpose(cofactor(checkMatrix(m)));
+        return transpose(cofactor(Matrix.convertToDouble(m)));
     }
 
     /**
@@ -128,7 +166,7 @@ public final class MatrixOperators {
      * @return Transposed matrix.
      */
     public DoubleMatrix transpose(Matrix<? extends Number> m) {
-        DoubleMatrix copy = checkMatrix(m);
+        DoubleMatrix copy = Matrix.convertToDouble(m);
         DoubleMatrix temp = new DoubleMatrix(m.getRow());
         for (int i = 0; i < m.getRow(); i++) {
             for (int j = 0; j < m.getCol(); j++) {
@@ -144,30 +182,32 @@ public final class MatrixOperators {
      * @param m The original matrix.
      * @return Inverse of the matrix. NULL if inverse does not exist.
      */
-    public DoubleMatrix inverse(Matrix<? extends Number> m) {
-        DoubleMatrix copy = checkMatrix(m);
-        if (doesInverseExist(copy)) {
-            DoubleMatrix inverse = new DoubleMatrix(copy.getRow());
-            double determinant = determinant(copy);
-            DecimalFormat df = new DecimalFormat("###.##");
-            for (int i = 0; i < copy.getRow(); i++) {
-                for (int j = 0; j < copy.getCol(); j++) {
-                    inverse.setElement(i, j, Double.parseDouble(df.format(adjugate(copy).getMatrix().get(i).get(j) / determinant)));
+    public DoubleMatrix inverse(Matrix<? extends Number> m, int method) {
+        DoubleMatrix copy = Matrix.convertToDouble(m);
+        switch (method) {
+            case CLASSIC -> {
+                if (doesInverseExist(copy)) {
+                    DoubleMatrix inverse = new DoubleMatrix(copy.getRow());
+                    double determinant = determinant(copy);
+                    for (int i = 0; i < copy.getRow(); i++) {
+                        for (int j = 0; j < copy.getCol(); j++) {
+                            inverse.setElement(i, j, BigDecimal.valueOf(adjugate(copy).getElement(i, j) / determinant).doubleValue());
+                        }
+                    }
+                    return inverse;
                 }
             }
-            return inverse;
+            case GAUSS_JORDAN -> {
+                Matrix<Double> identity = Matrix.getIdentityMatrix(m.getRow());
+
+                return gaussJordan(m);
+            }
         }
         return null;
     }
 
-    private DoubleMatrix checkMatrix(Matrix<? extends Number> m) {
-        DoubleMatrix copy;
-        if (m instanceof IntegerMatrix) {
-            copy = Matrix.convertToDouble(m);
-        } else {
-            copy = (DoubleMatrix) m;
-        }
-        return copy;
+    public DoubleMatrix inverse(Matrix<? extends Number> m) {
+        return inverse(m, CLASSIC);
     }
 
     /**
@@ -201,11 +241,11 @@ public final class MatrixOperators {
      * @return Array of solutions.
      */
     public double[] cramer(Matrix<? extends Number> m) {
-        DoubleMatrix copy = checkMatrix(m);
+        DoubleMatrix copy = Matrix.convertToDouble(m);
         if (!doesInverseExist(copy)) return null;
         double[] results = new double[copy.getRow()];
         double determinant = determinant(copy.getLHS());
-        double[] rhs = copy.getRHS();
+        double[] rhs = copy.getConstants();
 
         for (int i = 0; i < copy.getRow(); i++) {
             DoubleMatrix temp = new DoubleMatrix(copy.getRow(), copy.getCol(), copy.getMatrix());
@@ -232,18 +272,22 @@ public final class MatrixOperators {
      * Apply Gaussian Elimination to create an augmented matrix in a row echelon form. Ax = B, the rightmost column is B.
      *
      * @param m Matrix of integer elements.
-     * @return Row echelon matrix. null if determinant is 0. Returns null if the matrix has either infinite or no solutions.
+     * @return Row echelon matrix. Returns the matrix itself if the matrix is a square.
      */
     public DoubleMatrix gauss(Matrix<? extends Number> m) {
-        Matrix<Double> copy = checkMatrix(m);
-        return gauss(copy.getLHS(), copy.getRHS());
+        DoubleMatrix copy = Matrix.convertToDouble(m);
+        if (m.getRow() == m.getCol()) {
+            System.out.println("Matrix is a square. Cannot continue.");
+            return null;
+        }
+        return gauss(copy.getLHS(), copy.getConstants(), (copy.getRow() > copy.getCol()) ? copy.getRow() - copy.getCol() : 0);
     }
 
-    private DoubleMatrix gauss(Matrix<Double> result, double[] constants) {
+    private DoubleMatrix gauss(Matrix<Double> result, double[] constants, int offset) {
         int length = result.getRow();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length - offset; i++) {
             int max = i;
-            for (int j = i + 1; j < length; j++) {
+            for (int j = i + 1; j < length - offset; j++) {
                 if (Math.abs(result.getElement(j, i)) > Math.abs(result.getElement(max, i))) {
                     max = j;
                 }
@@ -253,27 +297,19 @@ public final class MatrixOperators {
             constants[i] = constants[max];
             constants[max] = t;
 
-            for (int j = i + 1; j < length; j++) {
+            for (int j = i + 1; j < length - offset; j++) {
                 if (Math.abs(result.getElement(i, i)) < EPSILON) continue;
                 double x = result.getElement(j, i) / result.getElement(i, i);
                 constants[j] -= x * constants[i];
                 result.setRowElements(j, rowSubtract(result.getRowElements(j), rowMultiply(result.getRowElements(i), x)));
             }
         }
-        double[] x = new double[length];
-        for (int i = length - 1; i >= 0; i--) {
-            double sum = 0.0;
-            for (int j = i + 1; j < length; j++) {
-                sum += result.getElement(i, j) * x[j];
-            }
-            x[i] = (constants[i] - sum) / result.getElement(i, i);
-        }
 
         for (int i = 0; i < length; i++) {
             result.getMatrix().get(i).add(constants[i]);
         }
 
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length - offset; i++) {
             if (result.getElement(i, i) == 1) continue;
             if (!(Math.abs(result.getElement(i, i)) < EPSILON)) {
                 if (result.getElement(i, i) > 1 || result.getElement(i, i) < 0) {
@@ -282,15 +318,27 @@ public final class MatrixOperators {
                     result.setRowElements(i, rowMultiply(result.getRowElements(i), 1 / result.getElement(i, i)));
                 }
             }
-
-            if (i == length - 1) {
-                for (int j = 0; j < length + 1; j++) {
-                    if ((result.getElement(i, j)) < EPSILON) {
-                        result.setElement(i, j, 0D);
-                    }
-                }
+        }
+        for (int j = 0; j < result.getCol() - offset; j++) {
+            if (Math.abs(result.getElement(length - 1, j)) < EPSILON) {
+                result.setElement(length - 1, j, 0D);
             }
         }
+
+        switch (MatrixType.getMatrixType(result)) {
+            case INFINITE -> {
+                String[] res = ParametricSolver.getInstance().solve(result);
+                for (String re : res) {
+                    System.out.println(re);
+                }
+                return null;
+            }
+            case NO_SOLUTIONS -> {
+                System.out.println("Matrix has no solutions.");
+                return null;
+            }
+        }
+
         return new DoubleMatrix(result.getMatrix());
     }
 
@@ -300,14 +348,14 @@ public final class MatrixOperators {
      * @param m Matrix of integer elements.
      * @return Reduced row echelon matrix. Returns null if the matrix has either infinite or no solutions.
      */
-    public DoubleMatrix gaussJordan(DoubleMatrix m) {
-        DoubleMatrix finalized = new DoubleMatrix(m.getRow(), m.getCol(), m.getMatrix());
+    public DoubleMatrix gaussJordan(Matrix<? extends Number> m) {
+        DoubleMatrix finalized = gauss(m);
         int length = m.getRow();
         for (int i = 0; i < length; i++) {
             if (Math.abs(finalized.getElement(i, i)) < EPSILON) {
                 finalized = swapRow(finalized, i);
             }
-            finalized.setRowElements(i, rowDivide(m.getRowElements(i), m.getElement(i, i)));
+            finalized.setRowElements(i, rowDivide(finalized.getRowElements(i), finalized.getElement(i, i)));
             for (int j = 0; j < length; j++) {
                 if (j == i) continue;
                 finalized.setRowElements(j, rowSubtract(finalized.getRowElements(j), rowMultiply(finalized.getRowElements(i), finalized.getElement(j, i) / finalized.getElement(i, i))));
@@ -317,7 +365,7 @@ public final class MatrixOperators {
             for (int j = 0; j < length + 1; j++) {
                 if (Double.isNaN(finalized.getElement(i, j)) || Double.isInfinite(finalized.getElement(i, j))) {
                     System.out.println("Matrix does not have a unique solution.");
-                    return null;
+                    return (DoubleMatrix) m;
                 }
                 if (Math.abs(finalized.getElement(i, j)) < EPSILON) {
                     finalized.setElement(i, j, 0D);
@@ -352,14 +400,7 @@ public final class MatrixOperators {
     }
 
     private ArrayList<Double> rowSubtract(Double[] row, ArrayList<Double> subtract) {
-        ArrayList<Double> sub = new ArrayList<>(row.length);
-        Iterator<Double> iterator = subtract.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i < row.length) {
-            sub.add(i, row[i] - iterator.next());
-            i++;
-        }
-        return sub;
+        return rowSubtract(row, subtract.stream().mapToDouble(Double::valueOf).boxed().toArray(Double[]::new));
     }
 
     private ArrayList<Double> rowSubtract(Double[] row, Double[] subtract) {

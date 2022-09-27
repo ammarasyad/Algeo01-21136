@@ -1,13 +1,13 @@
 package com.tubes.algeo;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 @SuppressWarnings("unchecked")
 public class Matrix<T> {
-
-    private final int row;
-    private final int col;
 
     private final List<List<T>> matrix;
 
@@ -19,26 +19,22 @@ public class Matrix<T> {
      * @param x   List of lists of any Number type (Matrix of Integer/Float/Double). Recommended: Double.
      */
     public Matrix(int row, int col, List<List<T>> x) {
-        this.row = row;
         this.matrix = new ArrayList<>(row);
         for (int i = 0; i < row; i++) {
             if (x != null) {
                 this.matrix.add(x.get(i));
             } else {
-                this.matrix.add(new ArrayList<>(col));
+                this.matrix.add(new ArrayList<>(col) {
+                    @Override
+                    public boolean add(T e) {
+                        super.add(e);
+                        return true;
+                    }
+                });
                 for (int j = 0; j < col; j++) { // default matrix initialization is zero
                     this.matrix.get(i).add((T) Double.valueOf(0)); // will always be a number
                 }
             }
-        }
-        if (x != null) {
-            if (col != x.get(0).size()) {
-                this.col = x.get(0).size();
-            } else {
-                this.col = col;
-            }
-        } else {
-            this.col = col;
         }
     }
 
@@ -71,8 +67,10 @@ public class Matrix<T> {
     }
 
     public static <E> void printMatrix(Matrix<E> m) {
-        for (List<E> l : m.getMatrix()) {
-            System.out.println(l);
+        if (m != null) {
+            for (List<E> l : m.getMatrix()) {
+                System.out.println(l);
+            }
         }
     }
 
@@ -81,17 +79,17 @@ public class Matrix<T> {
     }
 
     public int getRow() {
-        return row;
+        return matrix.size();
     }
 
     public int getCol() {
-        return col;
+        return matrix.get(0).size();
     }
 
-    public double[] getRHS() {
-        ArrayList<T> list = new ArrayList<>(getCol());
+    public double[] getConstants() {
+        ArrayList<T> list = new ArrayList<>(getRow());
         for (List<T> l : getMatrix()) {
-            list.add(l.get(getRow()));
+            list.add(l.get(getCol() - 1));
         }
         double[] rhs = new double[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -114,6 +112,18 @@ public class Matrix<T> {
         return getMatrix().get(i).get(j);
     }
 
+    public T[] getRowElements(int row) {
+        T[] copy = (T[]) Array.newInstance(Double.class, getMatrix().get(row).size());
+        Iterator<T> iterator = getMatrix().get(row).iterator();
+
+        int i = 0;
+        while (iterator.hasNext()) {
+            copy[i] = iterator.next();
+            i++;
+        }
+        return copy;
+    }
+
     public void setElement(int row, int col, T element) {
         this.getMatrix().get(row).set(col, element);
     }
@@ -125,18 +135,6 @@ public class Matrix<T> {
             iterator.next();
             iterator.set(iterator1.next());
         }
-    }
-
-    public T[] getRowElements(int row) {
-        T[] copy = (T[]) Array.newInstance(Double.class, getMatrix().get(row).size());
-        Iterator<T> iterator = getMatrix().get(row).iterator();
-
-        int i = 0;
-        while (iterator.hasNext()) {
-            copy[i] = iterator.next();
-            i++;
-        }
-        return copy;
     }
 
     public static <T extends Number> Matrix<T> getIdentityMatrix(int size) {

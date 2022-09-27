@@ -2,7 +2,7 @@ package com.tubes.algeo;
 
 import java.util.List;
 
-public class IntegerMatrix extends Matrix<Integer> implements Operators<Integer> {
+public class IntegerMatrix extends Matrix<Integer> implements IOperators<Integer> {
     public IntegerMatrix(List<List<Integer>> x) {
         super(x);
     }
