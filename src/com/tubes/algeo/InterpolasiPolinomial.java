@@ -9,7 +9,7 @@ public class InterpolasiPolinomial{
      * @param x Inputan x untuk f(x)
      * @return Perkiraan nilai f(x)
      */
-    public static double getEstimate(double[] coefficient, double x){ //aman
+    public static double getEstimate(double[] coefficient, double x){
         double res=0;
         
         for(int i=0;i<coefficient.length;i++){
@@ -24,7 +24,7 @@ public class InterpolasiPolinomial{
      * @param m matrix
      * @return list berisikan koefisien polinomial [a0,a1,...,an]
      */
-    public static double[] getCoefficient(DoubleMatrix m){ //need fix out of bound di bagian pembuatan mSPL
+    public static double[] getCoefficient(DoubleMatrix m){
         //buat jadi matrix spl terlebih dahulu
         DoubleMatrix mSPL = new DoubleMatrix(m.getRow(), m.getRow()+1);
         for(int i=0;i<mSPL.getRow();i++){
@@ -48,7 +48,7 @@ public class InterpolasiPolinomial{
         return b;
     }
 
-    public static void printPolinom(double[] b){ //aman
+    public static void printPolinom(double[] b){
         boolean x0 = true;
         System.out.println("Persamaan polinomial yang didapatkan dari interpolasi:");
         for(int i=b.length-1;i>=0;i--){
