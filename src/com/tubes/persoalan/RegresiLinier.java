@@ -6,6 +6,7 @@ import com.tubes.algeo.MatrixOperators;
 import com.tubes.algeo.MatrixFileOperator;
 import com.tubes.main.InputHandler;
 import java.util.*;
+import java.io.*;
 
 public class RegresiLinier {
     static Scanner sc = new Scanner(System.in);
@@ -83,10 +84,10 @@ public class RegresiLinier {
             System.out.printf("Masukkan %d persamaannya\n",baris);
             mat = InputHandler.inputDoubleMatrix(baris, kolom+1);
         }
-        mat.printMatrix(mat);
 
         //Selesaikan Regresi
         double[] res = getSolution(mat);
+        double hasil = 0;
         System.out.println();cetakFungsi(res);
         System.out.println();
         System.out.println("Apakah ingin lanjut ke tahapan mengtaksir nilai?\n1. Ya\n2. Tidak");
@@ -100,10 +101,43 @@ public class RegresiLinier {
             }
 
             //Dapat Estimasi
-            double hasil = getEstimate(res, peubah);
+            hasil = getEstimate(res, peubah);
             //Cetak Hasil
             System.out.printf("Hasil estimasi atau taksirannya: %f\n",hasil);
         }
-        //Output File?
+        //Output File
+        if(InputHandler.fileOutput()){
+            boolean done = false;
+            while(!done){
+                try{
+                    System.out.print("Path file yang dituju: ");
+                    String path = sc.next();
+                    FileWriter fw = new FileWriter(path);
+                    fw.write("Persamaan yang didapatkan:\ny = ");
+                    fw.write(Double.toString(res[0]));
+                    for(int i=1;i<res.length;i++){
+                        if(res[i]>0){
+                            fw.write(" + ");
+                        }
+                        else{
+                            fw.write(" - ");
+                        }
+                        fw.write(Double.toString(Math.abs(res[i])));
+                        fw.write(" x");
+                        fw.write(Integer.toString(i));
+                    }
+                    if(lanjut==1){
+                        fw.write("\nHasil estimasi atau taksirannya: ");
+                        fw.write(Double.toString(hasil));
+                    }
+                    fw.close();
+                    System.out.println("Berhasil menuliskan pada "+path);
+                    done = true;
+                }
+                catch(IOException error){
+                    System.out.println("Error!");
+                }
+            }
+        }
     }
 }
