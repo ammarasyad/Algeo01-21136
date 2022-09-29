@@ -24,19 +24,16 @@ public class RegresiLinier {
                 augmented.setElement(i, j+1, m.getElement(i, j));
             }
         }
-        //matrix augmented sudah aman
 
         //buat matrix SPL
-        DoubleMatrix mSPL = new DoubleMatrix(m.getCol()+1,m.getCol()+2); //dimensi udah bener
+        DoubleMatrix mSPL = new DoubleMatrix(m.getCol(),m.getCol()+1);
         for(int i=0;i<mSPL.getRow();i++){
             for(int j=0;j<mSPL.getCol();j++){
-                mSPL.setElement(i, j, 0D);
                 for(int k=0;k<m.getRow();k++){
-                    //fix this
                     mSPL.setElement(i, j, mSPL.getElement(i, j)+(augmented.getElement(k, i)*augmented.getElement(k, j)));
                 }
             }
-        }
+        } 
         System.out.println("\nDiperoleh Matriks SPL sebagai berikut:");
         mSPL.printMatrix(mSPL);
 
@@ -66,7 +63,7 @@ public class RegresiLinier {
 
     public static double getEstimate(double[] a, double[] peubah){
         double res = a[0];
-        for(int i=0;i<a.length;i++){
+        for(int i=0;i<peubah.length;i++){
             res+=a[i+1]*peubah[i];
         }
         return res;
@@ -83,8 +80,10 @@ public class RegresiLinier {
             int kolom = sc.nextInt();
             System.out.print("Masukkan banyak persamaan: ");
             int baris = sc.nextInt();
-            mat = InputHandler.inputDoubleMatrix(baris, kolom);
+            System.out.printf("Masukkan %d persamaannya\n",baris);
+            mat = InputHandler.inputDoubleMatrix(baris, kolom+1);
         }
+        mat.printMatrix(mat);
 
         //Selesaikan Regresi
         double[] res = getSolution(mat);
@@ -94,10 +93,16 @@ public class RegresiLinier {
         int lanjut = InputHandler.opsi(1,2);
         if(lanjut == 1){
             //Input Nilai Peubah ke List
+            double[] peubah = new double[res.length-1];
+            System.out.printf("Masukkan nilai dari %d peubahnya\n",res.length-1);
+            for(int i=0;i<res.length-1;i++){
+                peubah[i]=sc.nextDouble();
+            }
 
             //Dapat Estimasi
-
+            double hasil = getEstimate(res, peubah);
             //Cetak Hasil
+            System.out.printf("Hasil estimasi atau taksirannya: %f\n",hasil);
         }
         //Output File?
     }
