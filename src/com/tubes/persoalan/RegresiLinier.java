@@ -111,7 +111,7 @@ public class RegresiLinier {
             while(!done){
                 try{
                     System.out.print("Path file yang dituju: ");
-                    String path = sc.next();
+                    String path = sc.nextLine();
                     FileWriter fw = new FileWriter(path);
                     fw.write("Persamaan yang didapatkan:\ny = ");
                     fw.write(Double.toString(res[0]));
