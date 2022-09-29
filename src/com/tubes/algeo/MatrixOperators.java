@@ -129,6 +129,7 @@ public final class MatrixOperators {
                 }
             }
             case COFACTOR_EXPANSION -> {
+                System.out.println("BLA");
                 if (copy.getRow() != copy.getCol()) {
                     throw new ArithmeticException("Matrix is non-square.");
                 }
@@ -265,6 +266,7 @@ public final class MatrixOperators {
      * @return TRUE - determinant is non-zero. FALSE - determinant is zero.
      */
     private boolean doesInverseExist(DoubleMatrix m) {
+        //System.out.println(determinant(m));
         return determinant(m) != 0;
     }
 
