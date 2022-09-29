@@ -1,4 +1,4 @@
-
+package com.tubes.persoalan;
 
 import com.tubes.algeo.Matrix;
 import com.tubes.algeo.DoubleMatrix;
@@ -64,6 +64,14 @@ public class RegresiLinier {
         }
     }
 
+    public static double getEstimate(double[] a, double[] peubah){
+        double res = a[0];
+        for(int i=0;i<a.length;i++){
+            res+=a[i+1]*peubah[i];
+        }
+        return res;
+    }
+
     public static void driver(){
         //Buat Matriks untuk Diregresikan dulu
         DoubleMatrix mat;
@@ -80,5 +88,17 @@ public class RegresiLinier {
 
         //Selesaikan Regresi
         double[] res = getSolution(mat);
+        System.out.println();cetakFungsi(res);
+        System.out.println();
+        System.out.println("Apakah ingin lanjut ke tahapan mengtaksir nilai?\n1. Ya\n2. Tidak");
+        int lanjut = InputHandler.opsi(1,2);
+        if(lanjut == 1){
+            //Input Nilai Peubah ke List
+
+            //Dapat Estimasi
+
+            //Cetak Hasil
+        }
+        //Output File?
     }
 }

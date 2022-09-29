@@ -1,4 +1,4 @@
-
+package com.tubes.persoalan;
 
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
