@@ -196,7 +196,7 @@ public final class MatrixOperators {
                     double determinant = determinant(copy);
                     for (int i = 0; i < copy.getRow(); i++) {
                         for (int j = 0; j < copy.getCol(); j++) {
-                            inverse.setElement(i, j, BigDecimal.valueOf(adjugate(copy).getElement(i, j) / determinant).doubleValue());
+                            inverse.setElement(i, j, adjugate(copy).getElement(i, j) / determinant);
                         }
                     }
                     return inverse;
@@ -375,7 +375,7 @@ public final class MatrixOperators {
             for (int j = 0; j < length + 1; j++) {
                 if (Double.isNaN(finalized.getElement(i, j)) || Double.isInfinite(finalized.getElement(i, j))) {
                     System.out.println("Matrix does not have a unique solution.");
-                    return (DoubleMatrix) m;
+                    return null;
                 }
                 if (Math.abs(finalized.getElement(i, j)) < EPSILON) {
                     finalized.setElement(i, j, 0D);
