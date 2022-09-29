@@ -61,4 +61,8 @@ public class RegresiLinier {
             }
         }
     }
+
+    public static void driver(){
+        System.out.println();
+    }
 }
