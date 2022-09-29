@@ -1,26 +1,26 @@
-import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.Matrix;
+import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
+import com.tubes.algeo.MatrixFileOperator;
+import com.tubes.main.InputHandler;
+import java.util.*;
 
 public class RegresiLinier {
+    static Scanner sc = new Scanner(System.in);
     static MatrixOperators mOps = MatrixOperators.getInstance();
 
-    public static double[] getSolution(DoubleMatrix m, double[] y){
+    public static double[] getSolution(DoubleMatrix m){
         //buat matrix augmented dari data
-        DoubleMatrix augmented = new DoubleMatrix(m.getRow(),m.getCol()+2);
+        DoubleMatrix augmented = new DoubleMatrix(m.getRow(),m.getCol()+1);
         //set kolom pertama jadi satu semua
         for(int i=0;i<augmented.getRow();i++){
             augmented.setElement(i, 0, 1D);
         }
-        //salin isi matrix m ke bagian tengah matrix augmented
+        //salin isi matrix m ke matrix augmented
         for(int i=0;i<augmented.getRow();i++){
             for(int j=0;j<m.getCol();j++){
                 augmented.setElement(i, j+1, m.getElement(i, j));
             }
-        }
-        //salin isi y ke matrix augmented
-        for(int i=0;i<augmented.getRow();i++){
-            augmented.setElement(i, augmented.getCol()-1, y[i]);
         }
         //matrix augmented sudah aman
 
@@ -63,6 +63,20 @@ public class RegresiLinier {
     }
 
     public static void driver(){
-        System.out.println();
+        //Buat Matriks untuk Diregresikan dulu
+        DoubleMatrix mat;
+        if(InputHandler.inputFile()){ //Input dari file
+            mat = InputHandler.fileDoubleMatrix();
+        }
+        else{
+            System.out.print("Masukkan banyak peubah x: ");
+            int kolom = sc.nextInt();
+            System.out.print("Masukkan banyak persamaan: ");
+            int baris = sc.nextInt();
+            mat = InputHandler.inputDoubleMatrix(baris, kolom);
+        }
+
+        //Selesaikan Regresi
+        double[] res = getSolution(mat);
     }
 }
