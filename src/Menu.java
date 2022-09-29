@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Interface {
+public class Menu {
     static Scanner sc = new Scanner(System.in);
 
     protected static void identitas(){
