@@ -1,6 +1,5 @@
 package com.tubes.algeo;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +56,7 @@ public final class MatrixOperators {
     }
 
     public DoubleMatrix multiplyMatrixByMatrix(DoubleMatrix m1, DoubleMatrix m2) {
-        if (m1.getRow() != m2.getCol()) {
+        if (m1.getCol() != m2.getRow()) {
             System.out.println("Matrix multiplication is not possible.");
             return null;
         }
@@ -120,9 +119,10 @@ public final class MatrixOperators {
                         if (Math.abs(copy.getElement(j, i)) > Math.abs(copy.getElement(pivot, i))) {
                             pivot = j;
                             switchCount++;
+                            break;
                         }
                     }
-                    Collections.swap(copy.getMatrix(), i, pivot);
+                    if (pivot != i) Collections.swap(copy.getMatrix(), i, pivot);
                     for (int j = i + 1; j < copy.getRow(); j++) {
                         double x = copy.getElement(j, i) / copy.getElement(i, i);
                         copy.setRowElements(j, rowApply(copy.getRowElements(j), rowApply(copy.getRowElements(i), x, (p, q) -> p * q), (a, b) -> a - b));
@@ -133,7 +133,9 @@ public final class MatrixOperators {
                 }
             }
             case COFACTOR_EXPANSION -> {
-                System.out.println("BLA");
+                if (copy.getRow() >= 10) { // God save your soul.
+                    return determinant(m, ROW_REDUCTION);
+                }
                 if (copy.getRow() != copy.getCol()) {
                     throw new ArithmeticException("Matrix is non-square.");
                 }
