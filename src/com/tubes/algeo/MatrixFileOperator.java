@@ -21,7 +21,7 @@ public class MatrixFileOperator {
 
             String line = br.readLine();
             col = line.trim().replaceAll("-?[0-9 ]\\d*(\\.\\d+)?", "1").length();
-            double[] l = new double[col];
+            double[] l;
 
             List<List<Double>> list = new ArrayList<>((int) row);
             while (line != null) {
