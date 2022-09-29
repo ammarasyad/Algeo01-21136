@@ -1,7 +1,6 @@
-import java.util.*;
+package com.tubes.main;
 
 public class Menu {
-    static Scanner sc = new Scanner(System.in);
 
     protected static void identitas(){
         System.out.println("Program Tugas Besar 1 Algeo");
@@ -49,21 +48,5 @@ public class Menu {
         System.out.println("Apakah hasil ingin disimpan ke dalam suatu file?");
         System.out.println("1. Ya");
         System.out.println("2. Tidak");
-    }
-
-    protected static int opsi (int awal, int akhir){
-        int input;
-        System.out.println("Masukkan angka antara " + awal + " hingga " + akhir);
-        while(true){
-            System.out.print("> ");
-            input = sc.nextInt();
-            if(awal<=input && input<=akhir){
-                break;
-            }
-            else{
-                System.out.println("Input invalid. Mohon input lagi!");
-            }
-        }
-        return input;
     }
 }
