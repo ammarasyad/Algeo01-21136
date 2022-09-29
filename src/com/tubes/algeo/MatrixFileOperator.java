@@ -9,17 +9,7 @@ import java.util.stream.Stream;
 
 public class MatrixFileOperator {
 
-    private static MatrixFileOperator INSTANCE = null;
-
-    private MatrixFileOperator() {
-    }
-
-    public static MatrixFileOperator getInstance() {
-        if (INSTANCE == null) INSTANCE = new MatrixFileOperator();
-        return INSTANCE;
-    }
-
-    public DoubleMatrix createDMFromFile(String filename) {
+    public static DoubleMatrix createDMFromFile(String filename) {
         File file = new File(filename);
         DoubleMatrix matrix = null;
         long row;
@@ -46,11 +36,11 @@ public class MatrixFileOperator {
         return matrix;
     }
 
-    public IntegerMatrix createIMFromFile(String filename) {
+    public static IntegerMatrix createIMFromFile(String filename) {
         return Matrix.convertToInteger(createDMFromFile(filename));
     }
 
-    public void writeMatrixToFile(String filename, DoubleMatrix matrix) {
+    public static void writeMatrixToFile(String filename, DoubleMatrix matrix) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for (int i = 0; i < matrix.getRow(); i++) {
                 for (int j = 0; j < matrix.getCol(); j++) {

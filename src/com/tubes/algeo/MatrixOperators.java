@@ -35,7 +35,7 @@ public final class MatrixOperators {
     public DoubleMatrix addMatrix(DoubleMatrix m1, DoubleMatrix m2) {
         DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
-            result.setRowElements(i, rowAdd(m1.getRowElements(i), m2.getRowElements(i)));
+            result.setRowElements(i, rowApply(m1.getRowElements(i), m2.getRowElements(i), Double::sum));
         }
         return result;
     }
@@ -43,7 +43,7 @@ public final class MatrixOperators {
     public DoubleMatrix subtractMatrix(DoubleMatrix m1, DoubleMatrix m2) {
         DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
-            result.setRowElements(i, rowSubtract(m1.getRowElements(i), m2.getRowElements(i)));
+            result.setRowElements(i, rowApply(m1.getRowElements(i), m2.getRowElements(i), (x, y) -> x - y));
         }
         return result;
     }
@@ -51,7 +51,7 @@ public final class MatrixOperators {
     public DoubleMatrix multiplyMatrixByConst(DoubleMatrix m1, double multiplier) {
         DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
-            result.setRowElements(i, rowMultiply(m1.getRowElements(i), multiplier));
+            result.setRowElements(i, rowApply(m1.getRowElements(i), multiplier, (x, y) -> x * y));
         }
         return result;
     }
@@ -75,7 +75,7 @@ public final class MatrixOperators {
     public DoubleMatrix divideMatrix(DoubleMatrix m1, double divisor) {
         DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
-            result.setRowElements(i, rowDivide(m1.getRowElements(i), divisor));
+            result.setRowElements(i, rowApply(m1.getRowElements(i), divisor, (x, y) -> x / y));
         }
         return result;
     }
@@ -125,7 +125,7 @@ public final class MatrixOperators {
                     Collections.swap(copy.getMatrix(), i, pivot);
                     for (int j = i + 1; j < copy.getRow(); j++) {
                         double x = copy.getElement(j, i) / copy.getElement(i, i);
-                        copy.setRowElements(j, rowSubtract(copy.getRowElements(j), rowMultiply(copy.getRowElements(i), x)));
+                        copy.setRowElements(j, rowApply(copy.getRowElements(j), rowApply(copy.getRowElements(i), x, (p, q) -> p * q), (a, b) -> a - b));
                     }
                 }
                 for (int i = 0; i < copy.getRow(); i++) {
@@ -311,7 +311,7 @@ public final class MatrixOperators {
                 if (Math.abs(result.getElement(i, i)) < EPSILON) continue;
                 double x = result.getElement(j, i) / result.getElement(i, i);
                 constants[j] -= x * constants[i];
-                result.setRowElements(j, rowSubtract(result.getRowElements(j), rowMultiply(result.getRowElements(i), x)));
+                result.setRowElements(j, rowApply(result.getRowElements(j), rowApply(result.getRowElements(i), x, (a, b) -> a * b), (p, q) -> p - q));
             }
         }
 
@@ -323,9 +323,9 @@ public final class MatrixOperators {
             if (result.getElement(i, i) == 1) continue;
             if (!(Math.abs(result.getElement(i, i)) < EPSILON)) {
                 if (result.getElement(i, i) > 1 || result.getElement(i, i) < 0) {
-                    result.setRowElements(i, rowDivide(result.getRowElements(i), result.getElement(i, i)));
+                    result.setRowElements(i, rowApply(result.getRowElements(i), result.getElement(i, i), (p, q) -> p / q));
                 } else if (result.getElement(i, i) > 0 && result.getElement(i, i) < 1) {
-                    result.setRowElements(i, rowMultiply(result.getRowElements(i), 1 / result.getElement(i, i)));
+                    result.setRowElements(i, rowApply(result.getRowElements(i), 1 / result.getElement(i, i), (p, q) -> p * q));
                 }
             }
         }
@@ -365,10 +365,10 @@ public final class MatrixOperators {
             if (Math.abs(finalized.getElement(i, i)) < EPSILON) {
                 finalized = swapRow(finalized, i);
             }
-            finalized.setRowElements(i, rowDivide(finalized.getRowElements(i), finalized.getElement(i, i)));
+            finalized.setRowElements(i, rowApply(finalized.getRowElements(i), finalized.getElement(i, i), (p, q) -> p / q));
             for (int j = 0; j < length; j++) {
                 if (j == i) continue;
-                finalized.setRowElements(j, rowSubtract(finalized.getRowElements(j), rowMultiply(finalized.getRowElements(i), finalized.getElement(j, i) / finalized.getElement(i, i))));
+                finalized.setRowElements(j, rowApply(finalized.getRowElements(j), rowApply(finalized.getRowElements(i), finalized.getElement(j, i) / finalized.getElement(i, i), (a, b) -> a * b), (p, q) -> p - q));
             }
         }
         for (int i = 0; i < length; i++) {
@@ -385,38 +385,22 @@ public final class MatrixOperators {
         return finalized;
     }
 
-    private ArrayList<Double> rowAdd(Double[] row, Double[] add) {
-        ArrayList<Double> result = new ArrayList<>(row.length);
-        for (int i = 0; i < row.length; i++) {
-            result.add(row[i] + add[i]);
+    private ArrayList<Double> rowApply(Double[] row1, Double[] row2, IOperators<Double> operator) {
+        ArrayList<Double> result = new ArrayList<>(row1.length);
+        for (int i = 0; i < row1.length; i++) {
+            result.add(operator.apply(row1[i], row2[i]));
         }
         return result;
     }
 
-    private ArrayList<Double> rowMultiply(Double[] row, double multiplier) {
-        ArrayList<Double> multiplied = new ArrayList<>(row.length);
-        for (int i = 0; i < row.length; i++) {
-            multiplied.add(i, row[i] * multiplier);
-        }
-        return multiplied;
+    private ArrayList<Double> rowApply(Double[] row, ArrayList<Double> list, IOperators<Double> operator) {
+        return rowApply(row, list.stream().mapToDouble(Double::valueOf).boxed().toArray(Double[]::new), operator);
     }
 
-    private ArrayList<Double> rowDivide(Double[] row, double divisor) {
-        ArrayList<Double> divided = new ArrayList<>(row.length);
-        for (int i = 0; i < row.length; i++) {
-            divided.add(i, row[i] / divisor);
-        }
-        return divided;
-    }
-
-    private ArrayList<Double> rowSubtract(Double[] row, ArrayList<Double> subtract) {
-        return rowSubtract(row, subtract.stream().mapToDouble(Double::valueOf).boxed().toArray(Double[]::new));
-    }
-
-    private ArrayList<Double> rowSubtract(Double[] row, Double[] subtract) {
+    private ArrayList<Double> rowApply(Double[] row, double constant, IOperators<Double> operator) {
         ArrayList<Double> result = new ArrayList<>(row.length);
-        for (int i = 0; i < row.length; i++) {
-            result.add(row[i] - subtract[i]);
+        for (Double var : row) {
+            result.add(operator.apply(var, constant));
         }
         return result;
     }
