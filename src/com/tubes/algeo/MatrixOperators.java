@@ -57,11 +57,15 @@ public final class MatrixOperators {
     }
 
     public DoubleMatrix multiplyMatrixByMatrix(DoubleMatrix m1, DoubleMatrix m2) {
-        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m1.getCol());
+        if (m1.getRow() != m2.getCol()) {
+            System.out.println("Matrix multiplication is not possible.");
+            return null;
+        }
+        DoubleMatrix result = new DoubleMatrix(m1.getRow(), m2.getCol());
         for (int i = 0; i < m1.getRow(); i++) {
-            for (int j = 0; j < m1.getCol(); j++) {
-                for (int k = 0; k < m1.getCol(); k++) {
-                    result.setElement(i, j, result.getElement(i, j) + (m1.getElement(i, j) * m2.getElement(k, j)));
+            for (int j = 0; j < m2.getCol(); j++) {
+                for (int k = 0; k < m1.getRow(); k++) {
+                    result.setElement(i, j, result.getElement(i, j) + (m1.getElement(i, k) * m2.getElement(k, j)));
                 }
             }
         }
@@ -200,8 +204,12 @@ public final class MatrixOperators {
             }
             case GAUSS_JORDAN -> {
                 Matrix<Double> identity = Matrix.getIdentityMatrix(m.getRow());
-
-                return gaussJordan(m);
+                for (int i = 0; i < copy.getRow(); i++) {
+                    for (int j = 0; j < identity.getCol(); j++) {
+                        copy.getMatrix().get(i).add(identity.getElement(i, j));
+                    }
+                }
+                return gaussJordan(copy);
             }
         }
         return null;
