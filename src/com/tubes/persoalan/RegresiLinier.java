@@ -1,4 +1,4 @@
-package com.tubes.algeo;
+import com.tubes.algeo.DoubleMatrix;
 
 public class RegresiLinier {
     public static double[] getSolution(DoubleMatrix m, double[] y){
