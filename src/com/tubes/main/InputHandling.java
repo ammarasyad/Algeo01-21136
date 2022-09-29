@@ -31,10 +31,10 @@ public class InputHandling {
      * Menentukan apakah input dari keyboard atau dari file
      * @return
      */
-    public static int tipeMasukan(){
+    public static boolean inputFile(){
         System.out.println("Pilih Masukan:\n1. Keyboard\n2. File");
         int pilihan=opsi(1,2);
-        return pilihan;
+        return (pilihan==2);
     }
 
     /**
