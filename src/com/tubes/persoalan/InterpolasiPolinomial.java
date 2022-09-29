@@ -1,4 +1,5 @@
-package com.tubes.algeo;
+import com.tubes.algeo.DoubleMatrix;
+import com.tubes.algeo.MatrixOperators;
 
 public class InterpolasiPolinomial{
     static MatrixOperators mOps = MatrixOperators.getInstance();
