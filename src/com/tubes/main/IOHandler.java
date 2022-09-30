@@ -3,7 +3,7 @@ import java.util.*;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixFileOperator;
 
-public class InputHandler {
+public class IOHandler {
     static Scanner sc = new Scanner(System.in);
 
     /**
@@ -33,7 +33,7 @@ public class InputHandler {
      * @return
      */
     public static boolean inputFile(){
-        System.out.println("Pilih Masukan:\n1. Keyboard\n2. File");
+        Menu.menuInput();
         int pilihan=opsi(1,2);
         return (pilihan==2);
     }
@@ -63,6 +63,19 @@ public class InputHandler {
         String path = sc.nextLine();
         DoubleMatrix res = MatrixFileOperator.createDMFromFile(path);
         return res;
+    }
+
+    public static boolean fileOutput(){
+        Menu.menuOutput();
+        int pilihan=opsi(1,2);
+        return (pilihan==1);
+    }
+
+    protected static String outputFile(){
+        System.out.print("Path file yang dituju: ");
+        String path = sc.nextLine();
+        path = "../test/"+path;
+        return path;
     }
     
 }
