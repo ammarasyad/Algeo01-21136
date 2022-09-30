@@ -20,7 +20,8 @@ public class Menu {
         System.out.println("4. Interpolasi Polinom");
         System.out.println("5. Interpolasi Bicubic");
         System.out.println("6. Regresi Linier Berganda");
-        System.out.println("7. Keluar");
+        System.out.println("7. Image Upscale dengan Interpolasi Bicubic");
+        System.out.println("8. Keluar");
     }
 
     protected static void menuSPL(){
@@ -37,14 +38,19 @@ public class Menu {
         System.out.println("2. Metode Ekspansi Kofaktor");
     }
 
+    protected static void menuBalikan(){
+        System.out.println("MENU MATRIKS BALIKAN");
+        System.out.println("1. Metode Eliminasi Gauss-Jordan");
+        System.out.println("2. Metode Matriks Kofaktor");
+    }
+
     protected static void menuInput(){
-        System.out.println("MENU INPUT DATA MATRIKS");
+        System.out.println("TENTUKAN JENIS INPUT");
         System.out.println("1. Input Keyboard");
         System.out.println("2. Input File");
     }
 
     protected static void menuOutput(){
-        System.out.println("Hasil telah didapatkan.");
         System.out.println("Apakah hasil ingin disimpan ke dalam suatu file?");
         System.out.println("1. Ya");
         System.out.println("2. Tidak");
