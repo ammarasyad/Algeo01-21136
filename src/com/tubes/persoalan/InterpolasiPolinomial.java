@@ -1,9 +1,12 @@
 package com.tubes.persoalan;
 
+import java.util.Scanner;
+
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
 
 public class InterpolasiPolinomial{
+    static Scanner sc = new Scanner(System.in);
     static MatrixOperators mOps = MatrixOperators.getInstance();
 
     /**
@@ -52,8 +55,9 @@ public class InterpolasiPolinomial{
     }
 
     public static void printPolinom(double[] b){
-        boolean x0 = true;
+        boolean x0 = true; //x dengan pangkat 0
         System.out.println("Persamaan polinomial yang didapatkan dari interpolasi:");
+        System.out.print("p(x) = ");
         for(int i=b.length-1;i>=0;i--){
             if(b[i]!=0){
                 if(x0)x0=false;
