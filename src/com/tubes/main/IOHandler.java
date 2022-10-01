@@ -1,4 +1,5 @@
 package com.tubes.main;
+import java.io.*;
 import java.util.*;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixFileOperator;
@@ -59,8 +60,14 @@ public class IOHandler {
      * @return DoubleMatrix dari file sebuah absolute path
      */
     protected static DoubleMatrix fileDoubleMatrix(){
-        System.out.print("Masukkan lokasi file: ");
-        String path = sc.nextLine();
+        File tmpdir;String path;
+        do{
+            System.out.print("Masukkan nama file\n> ");
+            path = sc.next();
+            path = "./test/"+path;
+            tmpdir = new File(path);
+            System.out.println(tmpdir.getAbsolutePath());
+        }while(!tmpdir.exists());
         DoubleMatrix res = MatrixFileOperator.createDMFromFile(path);
         return res;
     }
@@ -72,9 +79,9 @@ public class IOHandler {
     }
 
     protected static String outputFile(){
-        System.out.print("Path file yang dituju: ");
-        String path = sc.nextLine();
-        path = "../test/"+path;
+        System.out.print("Masukkan nama file\n> ");
+        String path = sc.next();
+        path = "./test/"+path;
         return path;
     }
 }
