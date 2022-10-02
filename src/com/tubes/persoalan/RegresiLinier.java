@@ -1,9 +1,7 @@
 package com.tubes.persoalan;
 
-import com.tubes.algeo.Matrix;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
-import com.tubes.algeo.MatrixFileOperator;
 
 public class RegresiLinier {
     static MatrixOperators mOps = MatrixOperators.getInstance();
@@ -32,7 +30,7 @@ public class RegresiLinier {
             }
         } 
         System.out.println("\nDiperoleh Matriks SPL sebagai berikut:");
-        mSPL.printMatrix(mSPL);
+        DoubleMatrix.printMatrix(mSPL);
 
         //Solve SPL
         DoubleMatrix solved = mOps.gaussJordan(mSPL);
