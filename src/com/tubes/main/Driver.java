@@ -42,7 +42,18 @@ public class Driver {
                 mRes = mOps.gauss(mat);
                 DoubleMatrix.printMatrix(mRes);
                 if(IOHandler.fileOutput()){
-                    //output file
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
                 }
             }
             case 2->{
@@ -57,8 +68,7 @@ public class Driver {
                 for(int i=0;i<mat.getRow();i++){
                     mY.setElement(i, 0, mat.getElement(i, mat.getCol()-1));
                 }
-                DoubleMatrix mA = mat.getLHS();
-                mRes = mOps.multiplyMatrixByMatrix(mOps.inverse(mA), mY);
+                mRes = mOps.multiplyMatrixByMatrix(mOps.inverse(mat.getLHS()), mY);
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE MATRIKS BALIKAN");
                 for(int i=0;i<mRes.getRow();i++){
                     System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, 0));
@@ -226,7 +236,7 @@ public class Driver {
                 try{
                     String path = IOHandler.outputFile();
                     FileWriter fw = new FileWriter(path);Boolean x0=true;
-                    fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\np(x) = ");
+                    fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\nf(x) = ");
                     for(int i=coeff.length-1;i>=0;i--){
                         if(coeff[i]!=0){
                             if(x0)x0=false;
@@ -241,7 +251,6 @@ public class Driver {
                         fw.write("\nHasil estimasi dari f("+Double.toString(x)+"): "+Double.toString(res));
                     }
                     fw.close();
-                    System.out.println("Berhasil output pada "+path);
                     done = true;
                 }
                 catch(IOException error){
@@ -315,7 +324,6 @@ public class Driver {
                         fw.write(Double.toString(hasil));
                     }
                     fw.close();
-                    System.out.println("Berhasil output pada "+path);
                     done = true;
                 }
                 catch(IOException error){
