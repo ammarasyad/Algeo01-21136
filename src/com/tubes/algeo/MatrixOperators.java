@@ -253,15 +253,15 @@ public final class MatrixOperators {
      */
     public double[] cramer(Matrix<? extends Number> m) {
         DoubleMatrix copy = Matrix.convertToDouble(m);
-        if (!doesInverseExist(copy)) return null;
+        if (!doesInverseExist(copy.getLHS())) return null;
         double[] results = new double[copy.getRow()];
         double determinant = determinant(copy.getLHS());
         double[] rhs = copy.getConstants();
 
         for (int i = 0; i < copy.getRow(); i++) {
             DoubleMatrix temp = new DoubleMatrix(copy.getRow(), copy.getCol(), copy.getMatrix());
-            temp = (DoubleMatrix) temp.getLHS();
-            for (int j = 0; j < copy.getCol(); j++) {
+            temp = temp.getLHS();
+            for (int j = 0; j < copy.getRow(); j++) {
                 temp.setElement(j, i, rhs[j]);
             }
             results[i] = determinant(temp) / determinant;
@@ -339,7 +339,7 @@ public final class MatrixOperators {
 
         switch (MatrixType.getMatrixType(result)) {
             case INFINITE -> {
-                String[] res = ParametricSolver.getInstance().solve(result);
+                String[] res = ParametricSolver.solve(result);
                 for (String re : res) {
                     System.out.println(re);
                 }
@@ -361,7 +361,7 @@ public final class MatrixOperators {
      * @return Reduced row echelon matrix. Returns null if the matrix has either infinite or no solutions.
      */
     public DoubleMatrix gaussJordan(Matrix<? extends Number> m) {
-        DoubleMatrix finalized = gauss(m);
+        DoubleMatrix finalized = Matrix.convertToDouble(m);
         int length = m.getRow();
         for (int i = 0; i < length; i++) {
             if (Math.abs(finalized.getElement(i, i)) < EPSILON) {
