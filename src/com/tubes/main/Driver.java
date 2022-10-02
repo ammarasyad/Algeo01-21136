@@ -53,6 +53,30 @@ public class Driver {
             }
             case 3->{
                 //SPL Inverse
+                DoubleMatrix mY = new DoubleMatrix(mat.getRow(),1);
+                for(int i=0;i<mat.getRow();i++){
+                    mY.setElement(i, 0, mat.getElement(i, mat.getCol()-1));
+                }
+                DoubleMatrix mA = mat.getLHS();
+                mRes = mOps.multiplyMatrixByMatrix(mOps.inverse(mA), mY);
+                System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE MATRIKS BALIKAN");
+                for(int i=0;i<mRes.getRow();i++){
+                    System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, 0));
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
+                }
             }
             case 4->{
                 //SPL Cramer
