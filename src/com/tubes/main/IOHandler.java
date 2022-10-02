@@ -15,7 +15,7 @@ public class IOHandler {
      */
     public static int opsi (int awal, int akhir){
         int input;
-        System.out.println("Masukkan angka antara " + awal + " hingga " + akhir);
+        System.out.println("MASUKKAN ANGKA ANTARA " + awal + " HINGGA " + akhir);
         while(true){
             System.out.print("> ");
             input = sc.nextInt();
@@ -62,7 +62,7 @@ public class IOHandler {
     public static DoubleMatrix fileDoubleMatrix(){
         File tmpdir;String path;
         do{
-            System.out.print("Masukkan nama file\n> ");
+            System.out.print("MASUKKAN NAMA FILE\n> ");
             path = sc.next();
             path = "./test/"+path;
             tmpdir = new File(path);
@@ -78,9 +78,9 @@ public class IOHandler {
     }
 
     public static String outputFile(){
-        System.out.print("Masukkan nama file\n> ");
+        System.out.print("MASUKKAN NAMA FILE\n> ");
         String path = sc.next();
-        path = "./test/"+path;
+        path = "./test/output/"+path;
         return path;
     }
 }
