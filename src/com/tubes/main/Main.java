@@ -2,35 +2,44 @@ package com.tubes.main;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.Matrix;
 import com.tubes.algeo.MatrixFileOperator;
+import com.tubes.persoalan.InterpolasiPolinomial;
+import com.tubes.persoalan.RegresiLinier;
+import com.tubes.main.*;
 
 public class Main extends Menu{
     public static void main(String[] args){
-        // boolean running=true; //Digunakan untuk mempermudah kembali ke menu utama
-        // int input; //Pilihan user sesuai interface
-
-        // while(running){
-        //     menuUtama();
-        //     input = opsi(1,7);
-        //     switch(input){
-        //         case 1: //SPL
-        //             break;
-        //         case 2: //Determinan
-        //             break;
-        //         case 3: //Inverse
-        //             break;
-        //         case 4: //Interpolasi Polinom
-        //             break;
-        //         case 5: //Interpolasi Bicubic
-        //             break;
-        //         case 6: //Regresi Linier Berganda
-        //             break;
-        //         default: //Input 7
-        //             System.out.println("Terima kasih telah menggunakan program ini.");
-        //             running = false;
-        //             break;
-        //     }
-        // }
-
-        //---------- BATAS SUCI PENGETESAN ----------
+        Menu.identitas();
+        while(true){
+            Menu.menuUtama();
+            int input=IOHandler.opsi(1,8);
+            switch(input){
+                case 1 -> {
+                    Driver.driverSPL();
+                }
+                case 2 -> {
+                    Driver.driverDeterminan();
+                }
+                case 3 -> {
+                    Driver.driverBalikan();
+                }
+                case 4 -> {
+                    Driver.driverPolinomial();
+                }
+                case 5 -> {
+                    Driver.driverBicubic();
+                }
+                case 6 -> {
+                    Driver.driverRegresi();
+                }
+                case 7 -> {
+                    Driver.driverBonus();
+                }
+                case 8 -> {
+                    System.out.println();
+                    System.out.println("Terima kasih telah menggunakan program ini ^^");
+                    System.exit(0);
+                }
+            }
+        }
     }
 }

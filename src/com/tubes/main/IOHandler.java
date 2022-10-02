@@ -1,9 +1,10 @@
 package com.tubes.main;
+import java.io.*;
 import java.util.*;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixFileOperator;
 
-public class InputHandler {
+public class IOHandler {
     static Scanner sc = new Scanner(System.in);
 
     /**
@@ -12,7 +13,7 @@ public class InputHandler {
      * @param akhir batas atas input
      * @return input yang berhasil
      */
-    public static int opsi (int awal, int akhir){
+    protected static int opsi (int awal, int akhir){
         int input;
         System.out.println("Masukkan angka antara " + awal + " hingga " + akhir);
         while(true){
@@ -32,8 +33,8 @@ public class InputHandler {
      * Menentukan apakah input dari keyboard atau dari file
      * @return
      */
-    public static boolean inputFile(){
-        System.out.println("Pilih Masukan:\n1. Keyboard\n2. File");
+    protected static boolean inputFile(){
+        Menu.menuInput();
         int pilihan=opsi(1,2);
         return (pilihan==2);
     }
@@ -44,7 +45,7 @@ public class InputHandler {
      * @param col jumlah kolom matriks
      * @return DoubleMatrix yang telah terisi
      */
-    public static DoubleMatrix inputDoubleMatrix(int row, int col){
+    protected static DoubleMatrix inputDoubleMatrix(int row, int col){
         DoubleMatrix res = new DoubleMatrix(row, col);
         for(int i=0;i<row;i++){
             for(int j=0;j<col;j++){
@@ -58,11 +59,29 @@ public class InputHandler {
      * Membuat doubleMatrix dari input sebuah file
      * @return DoubleMatrix dari file sebuah absolute path
      */
-    public static DoubleMatrix fileDoubleMatrix(){
-        System.out.print("Masukkan lokasi file: ");
-        String path = sc.nextLine();
+    protected static DoubleMatrix fileDoubleMatrix(){
+        File tmpdir;String path;
+        do{
+            System.out.print("Masukkan nama file\n> ");
+            path = sc.next();
+            path = "./test/"+path;
+            tmpdir = new File(path);
+            System.out.println(tmpdir.getAbsolutePath());
+        }while(!tmpdir.exists());
         DoubleMatrix res = MatrixFileOperator.createDMFromFile(path);
         return res;
     }
-    
+
+    protected static boolean fileOutput(){
+        Menu.menuOutput();
+        int pilihan=opsi(1,2);
+        return (pilihan==1);
+    }
+
+    protected static String outputFile(){
+        System.out.print("Masukkan nama file\n> ");
+        String path = sc.next();
+        path = "./test/"+path;
+        return path;
+    }
 }
