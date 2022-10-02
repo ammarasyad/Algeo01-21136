@@ -66,7 +66,6 @@ public class IOHandler {
             path = sc.next();
             path = "./test/"+path;
             tmpdir = new File(path);
-            System.out.println(tmpdir.getAbsolutePath());
         }while(!tmpdir.exists());
         DoubleMatrix res = MatrixFileOperator.createDMFromFile(path);
         return res;
