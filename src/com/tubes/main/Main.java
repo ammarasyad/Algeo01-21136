@@ -9,7 +9,7 @@ public class Main extends Menu{
         Menu.identitas();
         while(true){
             Menu.menuUtama();
-            int input=IOHandler.opsi(1,8);
+            int input=IOHandler.opsi(1,7);
             switch(input){
                 case 1 -> {
                     Driver.driverSPL();
@@ -27,7 +27,6 @@ public class Main extends Menu{
                     try {
                         BicubicInterpolation.START();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
