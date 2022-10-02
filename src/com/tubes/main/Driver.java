@@ -9,10 +9,6 @@ public class Driver {
     static Scanner sc = new Scanner(System.in);
     static MatrixOperators mOps = MatrixOperators.getInstance();
 
-    protected static void printGauss(DoubleMatrix m){
-
-    }
-
     protected static void driverSPL(){
         DoubleMatrix mat;
         if(IOHandler.inputFile()){
@@ -44,6 +40,7 @@ public class Driver {
                 //SPL Gauss
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS");
                 mRes = mOps.gauss(mat);
+                DoubleMatrix.printMatrix(mRes);
                 if(IOHandler.fileOutput()){
                     //output file
                 }
@@ -61,6 +58,23 @@ public class Driver {
                 //SPL Cramer
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE CRAMER");
                 res = mOps.cramer(mat);
+                for(int i=0;i<res.length;i++){
+                    System.out.printf("x%d = %f\n",i+1,res[i]);
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<res.length;i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(res[i]));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
+                }
             }
         }
     }
