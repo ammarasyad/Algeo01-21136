@@ -20,8 +20,7 @@ public class Menu {
         System.out.println("4. Interpolasi Polinom");
         System.out.println("5. Interpolasi Bicubic");
         System.out.println("6. Regresi Linier Berganda");
-        System.out.println("7. Image Upscale dengan Interpolasi Bicubic");
-        System.out.println("8. Keluar");
+        System.out.println("7. Keluar");
     }
 
     protected static void menuSPL(){
