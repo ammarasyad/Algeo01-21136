@@ -10,6 +10,28 @@ Semester 1 Tahun 2022/2023<br/>
 </p>
 
 ## Deskripsi
+Tugas Besar ini meliputi beberapa fitur:
+1. Kalkulator Sistem Persamaan Linier dengan pendekatan eliminasi gauss, eliminasi gauss-jordan, matriks balikan, dan kaidah cramer
+2. Kalkulator determinan suatu matriks persegi dengan pendekatan reduksi baris dan ekspansi kofaktor
+3. Kalkulator balikan suatu matriks persegi dengan pendekatan matrisk adjoin dan metode gauss-jordan
+4. Kalkulator interpolasi polinom
+5. Kalkulator interpolasi bicubic serta upscaling sebuah citra visual dengan interpolasi bicubic
+6. Kalkulator regresi linier berganda
+
+## Struktur Folder
+1. `bin` berisikan _java bytecode_ (*.class)
+2. `src` berisikan _source code_ dari program java
+3. `test` berisikan data uji
+4. `doc` berisikan laporan
+
+## Program Environment
+<ul>
+    <li>Java(TM) SE Runtime Environment (build 17.0.4.1+1-LTS-2)
+    <li>java version "17.0.4.1" 2022-08-18 LTS
+    <li> Visual Studio Code dan IntelliJ IDEA
+</ul>
+
+## Cara Menjalankan Program
 
 ## Anggota
 <table>
