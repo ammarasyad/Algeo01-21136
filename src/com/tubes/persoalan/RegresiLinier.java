@@ -48,10 +48,10 @@ public class RegresiLinier {
         System.out.printf("y = %f",a[0]);
         for(int i=1;i<a.length;i++){
             if(a[i]>0){
-                System.out.printf(" + %f x%d", a[i],i);
+                System.out.printf(" + %f x^%d", a[i],i);
             }
             else{
-                System.out.printf(" - %f x%d",Math.abs(a[i]),i);
+                System.out.printf(" - %f x^%d",Math.abs(a[i]),i);
             }
         }
     }
