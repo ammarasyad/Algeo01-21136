@@ -260,10 +260,6 @@ public class Driver {
         }
     }
 
-    protected static void driverBicubic(){
-
-    }
-
     protected static void driverRegresi(){
         //Buat Matriks untuk Diregresikan dulu
         DoubleMatrix mat;
@@ -316,7 +312,7 @@ public class Driver {
                             fw.write(" - ");
                         }
                         fw.write(Double.toString(Math.abs(res[i])));
-                        fw.write(" x");
+                        fw.write(" x^");
                         fw.write(Integer.toString(i));
                     }
                     if(lanjut==1){
@@ -331,9 +327,5 @@ public class Driver {
                 }
             }
         }
-    }
-
-    protected static void driverBonus(){
-
     }
 }
