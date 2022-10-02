@@ -1,6 +1,7 @@
 package com.tubes.algeo;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import com.tubes.algeo.*;
@@ -52,14 +53,14 @@ public class BicubicInterpolation{
     }
     
     public static void matrixInterpolation(){
-        System.out.println("Masukkan matrix 4x4!");
+        System.out.println("MASUKKAN MATRIKS 4x4!");
         DoubleMatrix m;
         if(IOHandler.inputFile()){
             m = new DoubleMatrix(IOHandler.fileDoubleMatrix().getMatrix());
         }else{
             m = new DoubleMatrix(IOHandler.inputDoubleMatrix(4, 4).getMatrix());
         }
-        System.out.println("Masukkan X dan Y untuk diinterpolasi: ");
+        System.out.print("MASUKKAN X DAN Y UNTUK DIINTERPOLASI\n> ");
         double x = inp.nextDouble();
         double y = inp.nextDouble();
         DoubleMatrix func = new DoubleMatrix(16,1,getFunctionMatrix(m).getMatrix());
@@ -70,6 +71,18 @@ public class BicubicInterpolation{
         System.out.print("Berikut hasil interpolasi: ");
         double potongHasil = Double.parseDouble(String.format("%.2f", (double)hasil));
         System.out.println(potongHasil);
+        if(IOHandler.fileOutput()){
+            try{
+                String path = IOHandler.outputFile();
+                FileWriter fw = new FileWriter(path);
+                fw.write("Berikut hasil interpolasi: ");
+                fw.write(Double.toString(potongHasil));
+                fw.close();
+            }
+            catch(IOException error){
+                System.out.println("Error!");
+            }
+        }
     }
 
     /**
