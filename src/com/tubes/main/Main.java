@@ -1,10 +1,8 @@
 package com.tubes.main;
-import com.tubes.algeo.DoubleMatrix;
-import com.tubes.algeo.Matrix;
-import com.tubes.algeo.MatrixFileOperator;
-import com.tubes.persoalan.InterpolasiPolinomial;
-import com.tubes.persoalan.RegresiLinier;
-import com.tubes.main.*;
+
+import java.io.IOException;
+
+import com.tubes.algeo.BicubicInterpolation;
 
 public class Main extends Menu{
     public static void main(String[] args){
@@ -26,16 +24,17 @@ public class Main extends Menu{
                     Driver.driverPolinomial();
                 }
                 case 5 -> {
-                    Driver.driverBicubic();
+                    try {
+                        BicubicInterpolation.START();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
                 case 6 -> {
                     Driver.driverRegresi();
                 }
                 case 7 -> {
-                    Driver.driverBonus();
-                }
-                case 8 -> {
-                    System.out.println();
                     System.out.println("Terima kasih telah menggunakan program ini ^^");
                     System.exit(0);
                 }
