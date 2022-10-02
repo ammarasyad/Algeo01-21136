@@ -149,7 +149,7 @@ public class Driver {
             try{
                 String path = IOHandler.outputFile();
                 FileWriter fw = new FileWriter(path);
-                fw.write("Determinan dar matriks tersebut:\n");
+                fw.write("Determinan dari matriks tersebut:\n");
                 fw.write(Double.toString(res));
                 fw.close();
             }
@@ -231,31 +231,27 @@ public class Driver {
         }
         //Output file
         if(IOHandler.fileOutput()){
-            boolean done = false;
-            while(!done){
-                try{
-                    String path = IOHandler.outputFile();
-                    FileWriter fw = new FileWriter(path);Boolean x0=true;
-                    fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\nf(x) = ");
-                    for(int i=coeff.length-1;i>=0;i--){
-                        if(coeff[i]!=0){
-                            if(x0)x0=false;
-                            else if(coeff[i]>0&&!x0)fw.write(" + ");
-                            fw.write(Double.toString(coeff[i]));
-                            if(i!=0){
-                                fw.write("x^"+Integer.toString(i));
-                            }
+            try{
+                String path = IOHandler.outputFile();
+                FileWriter fw = new FileWriter(path);Boolean x0=true;
+                fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\nf(x) = ");
+                for(int i=coeff.length-1;i>=0;i--){
+                    if(coeff[i]!=0){
+                        if(x0)x0=false;
+                        else if(coeff[i]>0&&!x0)fw.write(" + ");
+                        fw.write(Double.toString(coeff[i]));
+                        if(i!=0){
+                            fw.write("x^"+Integer.toString(i));
                         }
                     }
-                    if(lanjut==1){
-                        fw.write("\nHasil estimasi dari f("+Double.toString(x)+"): "+Double.toString(res));
-                    }
-                    fw.close();
-                    done = true;
                 }
-                catch(IOException error){
-                    System.out.println("Error!");
+                if(lanjut==1){
+                    fw.write("\nHasil estimasi dari f("+Double.toString(x)+"): "+Double.toString(res));
                 }
+                fw.close();
+            }
+            catch(IOException error){
+                System.out.println("Error!");
             }
         }
     }
@@ -297,34 +293,30 @@ public class Driver {
         }
         //Output File
         if(IOHandler.fileOutput()){
-            boolean done = false;
-            while(!done){
-                try{
-                    String path = IOHandler.outputFile();
-                    FileWriter fw = new FileWriter(path);
-                    fw.write("Persamaan yang didapatkan:\ny = ");
-                    fw.write(Double.toString(res[0]));
-                    for(int i=1;i<res.length;i++){
-                        if(res[i]>0){
-                            fw.write(" + ");
-                        }
-                        else{
-                            fw.write(" - ");
-                        }
-                        fw.write(Double.toString(Math.abs(res[i])));
-                        fw.write(" x^");
-                        fw.write(Integer.toString(i));
+            try{
+                String path = IOHandler.outputFile();
+                FileWriter fw = new FileWriter(path);
+                fw.write("Persamaan yang didapatkan:\ny = ");
+                fw.write(Double.toString(res[0]));
+                for(int i=1;i<res.length;i++){
+                    if(res[i]>0){
+                        fw.write(" + ");
                     }
-                    if(lanjut==1){
-                        fw.write("\nHasil estimasi atau taksirannya: ");
-                        fw.write(Double.toString(hasil));
+                    else{
+                        fw.write(" - ");
                     }
-                    fw.close();
-                    done = true;
+                    fw.write(Double.toString(Math.abs(res[i])));
+                    fw.write(" x^");
+                    fw.write(Integer.toString(i));
                 }
-                catch(IOException error){
-                    System.out.println("Error!");
+                if(lanjut==1){
+                    fw.write("\nHasil estimasi atau taksirannya: ");
+                    fw.write(Double.toString(hasil));
                 }
+                fw.close();
+            }
+            catch(IOException error){
+                System.out.println("Error!");
             }
         }
     }
