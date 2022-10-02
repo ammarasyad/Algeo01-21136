@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.tubes.algeo.*;
-import com.tubes.main.InputHandler;
+import com.tubes.main.IOHandler;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -27,7 +27,7 @@ public class BicubicInterpolation{
 
     public static void START()throws IOException{
         System.out.println("Apakah ingin memperbesar citra(1) atau interpolasi menggunakan matrix(2)?");
-        int input = InputHandler.opsi(1, 2);
+        int input = IOHandler.opsi(1, 2);
         if(input==1){
             solve();
         }else{
@@ -54,10 +54,10 @@ public class BicubicInterpolation{
     public static void matrixInterpolation(){
         System.out.println("Masukkan matrix 4x4!");
         DoubleMatrix m;
-        if(InputHandler.inputFile()){
-            m = new DoubleMatrix(InputHandler.fileDoubleMatrix().getMatrix());
+        if(IOHandler.inputFile()){
+            m = new DoubleMatrix(IOHandler.fileDoubleMatrix().getMatrix());
         }else{
-            m = new DoubleMatrix(InputHandler.inputDoubleMatrix(4, 4).getMatrix());
+            m = new DoubleMatrix(IOHandler.inputDoubleMatrix(4, 4).getMatrix());
         }
         System.out.println("Masukkan X dan Y untuk diinterpolasi: ");
         double x = inp.nextDouble();
