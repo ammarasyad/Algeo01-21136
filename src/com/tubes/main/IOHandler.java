@@ -13,7 +13,7 @@ public class IOHandler {
      * @param akhir batas atas input
      * @return input yang berhasil
      */
-    protected static int opsi (int awal, int akhir){
+    public static int opsi (int awal, int akhir){
         int input;
         System.out.println("Masukkan angka antara " + awal + " hingga " + akhir);
         while(true){
@@ -33,7 +33,7 @@ public class IOHandler {
      * Menentukan apakah input dari keyboard atau dari file
      * @return
      */
-    protected static boolean inputFile(){
+    public static boolean inputFile(){
         Menu.menuInput();
         int pilihan=opsi(1,2);
         return (pilihan==2);
@@ -45,7 +45,7 @@ public class IOHandler {
      * @param col jumlah kolom matriks
      * @return DoubleMatrix yang telah terisi
      */
-    protected static DoubleMatrix inputDoubleMatrix(int row, int col){
+    public static DoubleMatrix inputDoubleMatrix(int row, int col){
         DoubleMatrix res = new DoubleMatrix(row, col);
         for(int i=0;i<row;i++){
             for(int j=0;j<col;j++){
@@ -59,7 +59,7 @@ public class IOHandler {
      * Membuat doubleMatrix dari input sebuah file
      * @return DoubleMatrix dari file sebuah absolute path
      */
-    protected static DoubleMatrix fileDoubleMatrix(){
+    public static DoubleMatrix fileDoubleMatrix(){
         File tmpdir;String path;
         do{
             System.out.print("Masukkan nama file\n> ");
@@ -72,13 +72,13 @@ public class IOHandler {
         return res;
     }
 
-    protected static boolean fileOutput(){
+    public static boolean fileOutput(){
         Menu.menuOutput();
         int pilihan=opsi(1,2);
         return (pilihan==1);
     }
 
-    protected static String outputFile(){
+    public static String outputFile(){
         System.out.print("Masukkan nama file\n> ");
         String path = sc.next();
         path = "./test/"+path;
