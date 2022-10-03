@@ -412,16 +412,4 @@ public final class MatrixOperators {
         count = 0;
         return m;
     }
-
-    private void swapCol(Matrix<Double> matrix, int col, int pivot) {
-        ArrayList<Double> array = new ArrayList<>();
-        for (int i = 0; i < matrix.getRow(); i++) {
-            array.add(matrix.getElement(i, col));
-        }
-
-        for (int i = 0; i < matrix.getRow(); i++) {
-            matrix.setElement(i, col, matrix.getElement(i, pivot));
-            matrix.setElement(i, pivot, array.get(i));
-        }
-    }
 }

@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfee54d9-5ed8-46a5-8687-30bc19736135" name="Changes" comment="feat/fix!: Reworked Gaussian Elimination">
+    <list default="true" id="cfee54d9-5ed8-46a5-8687-30bc19736135" name="Changes" comment="feat/fix!: Reworked Gaussian Elimination (again)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/Matrix.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixOperators.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixOperators.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixType.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/Matrix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixOperators.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,6 +32,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "D:/Kuliah/AlGeo/Tubes/Algeo01-21136",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm"
   }
@@ -74,6 +71,7 @@
       <workItem from="1664369749550" duration="21468000" />
       <workItem from="1664435954196" duration="2770000" />
       <workItem from="1664457488377" duration="189000" />
+      <workItem from="1664811641489" duration="4024000" />
     </task>
     <task id="LOCAL-00001" summary="feat: bicubic interpolation">
       <created>1664431654715</created>
@@ -82,7 +80,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664431654715</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat/fix!: Reworked Gaussian Elimination (again)">
+      <created>1664804823701</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1664804823701</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,19 +112,20 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="feat: bicubic interpolation" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: bicubic interpolation" />
+    <MESSAGE value="feat/fix!: Reworked Gaussian Elimination (again)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat/fix!: Reworked Gaussian Elimination (again)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java</url>
-          <line>5</line>
-          <properties class="com.tubes.algeo.ParametricSolver" method="solve">
+          <line>52</line>
+          <properties class="com.tubes.algeo.ParametricSolver">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="57" />
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
