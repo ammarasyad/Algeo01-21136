@@ -363,6 +363,7 @@ public final class MatrixOperators {
             for (int j = 0; j < length + 1; j++) {
                 if (Double.isNaN(finalized.getElement(i, j)) || Double.isInfinite(finalized.getElement(i, j))) {
                     System.out.println("Tidak ada solusi unik.");
+                    System.out.println("Coba gunakan metode eliminasi gauss.");
                     return null;
                 }
                 if (Math.abs(finalized.getElement(i, j)) < EPSILON) {
