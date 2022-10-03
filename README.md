@@ -31,8 +31,6 @@ Tugas Besar ini meliputi beberapa fitur:
     <li> Visual Studio Code dan IntelliJ IDEA
 </ul>
 
-## Cara Menjalankan Program
-
 ## Anggota
 <table>
     <tr>
