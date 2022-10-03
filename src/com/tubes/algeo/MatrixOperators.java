@@ -1,5 +1,6 @@
 package com.tubes.algeo;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -292,49 +293,29 @@ public final class MatrixOperators {
             System.out.println("Matrix is a square. Cannot continue.");
             return null;
         }
-        return gauss(copy.getLHS(), copy.getConstants(), (copy.getRow() > copy.getCol()) ? copy.getRow() - copy.getCol() : 0);
+        return gauss(copy.getLHS(), copy.getConstants());
     }
 
-    private DoubleMatrix gauss(Matrix<Double> result, double[] constants, int offset) {
-        int length = result.getRow();
-        for (int i = 0; i < length - offset; i++) {
-            int max = i;
-            for (int j = i + 1; j < length - offset; j++) {
-                if (Math.abs(result.getElement(j, i)) > Math.abs(result.getElement(max, i))) {
-                    max = j;
-                }
+    private DoubleMatrix gauss(Matrix<Double> result, double[] constants) {
+        DecimalFormat df = new DecimalFormat("###.##");
+        int size = Math.min(result.getRow(), result.getCol());
+//        int size = result.getRow();
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                result.setElement(i, j, result.getElement(i, j) / result.getElement(i, i));
             }
-            Collections.swap(result.getMatrix(), i, max);
-            double t = constants[i];
-            constants[i] = constants[max];
-            constants[max] = t;
 
-            for (int j = i + 1; j < length - offset; j++) {
-                if (Math.abs(result.getElement(i, i)) < EPSILON) continue;
+            constants[i] /= result.getElement(i, i);
+            result.setElement(i, i, 1D);
+
+            for (int j = i + 1; j < size; j++) {
                 double x = result.getElement(j, i) / result.getElement(i, i);
                 constants[j] -= x * constants[i];
                 result.setRowElements(j, rowApply(result.getRowElements(j), rowApply(result.getRowElements(i), x, (a, b) -> a * b), (p, q) -> p - q));
             }
         }
-
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < size; i++) {
             result.getMatrix().get(i).add(constants[i]);
-        }
-
-        for (int i = 0; i < length - offset; i++) {
-            if (result.getElement(i, i) == 1) continue;
-            if (!(Math.abs(result.getElement(i, i)) < EPSILON)) {
-                if (result.getElement(i, i) > 1 || result.getElement(i, i) < 0) {
-                    result.setRowElements(i, rowApply(result.getRowElements(i), result.getElement(i, i), (p, q) -> p / q));
-                } else if (result.getElement(i, i) > 0 && result.getElement(i, i) < 1) {
-                    result.setRowElements(i, rowApply(result.getRowElements(i), 1 / result.getElement(i, i), (p, q) -> p * q));
-                }
-            }
-        }
-        for (int j = 0; j < result.getCol() - offset; j++) {
-            if (Math.abs(result.getElement(length - 1, j)) < EPSILON) {
-                result.setElement(length - 1, j, 0D);
-            }
         }
 
         switch (MatrixType.getMatrixType(result)) {
@@ -348,6 +329,12 @@ public final class MatrixOperators {
             case NO_SOLUTIONS -> {
                 System.out.println("Matrix has no solutions.");
                 return null;
+            }
+        }
+
+        for (int i = 0; i < result.getRow(); i++) {
+            for (int j = 0; j < result.getCol(); j++) {
+                result.setElement(i, j, Double.parseDouble(df.format(result.getElement(i, j))));
             }
         }
 

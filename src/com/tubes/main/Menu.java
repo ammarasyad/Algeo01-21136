@@ -54,4 +54,10 @@ public class Menu {
         System.out.println("1. Ya");
         System.out.println("2. Tidak");
     }
+
+    protected static void menuBicubic(){
+        System.out.println("MENU INTERPOLASI BICUBIC");
+        System.out.println("1. Memperbesar citra");
+        System.out.println("2. Interpolasi matriks");
+    }
 }

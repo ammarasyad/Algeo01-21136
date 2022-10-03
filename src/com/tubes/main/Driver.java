@@ -47,8 +47,20 @@ public class Driver {
                 //SPL Gauss
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS");
                 mRes = mOps.gauss(mat);
+                DoubleMatrix.printMatrix(mRes);
                 if(IOHandler.fileOutput()){
-                    //output file
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
                 }
             }
             case 2->{
@@ -59,11 +71,51 @@ public class Driver {
             }
             case 3->{
                 //SPL Inverse
+                DoubleMatrix mY = new DoubleMatrix(mat.getRow(),1);
+                for(int i=0;i<mat.getRow();i++){
+                    mY.setElement(i, 0, mat.getElement(i, mat.getCol()-1));
+                }
+                mRes = mOps.multiplyMatrixByMatrix(mOps.inverse(mat.getLHS()), mY);
+                System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE MATRIKS BALIKAN");
+                for(int i=0;i<mRes.getRow();i++){
+                    System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, 0));
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
+                }
             }
             case 4->{
                 //SPL Cramer
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE CRAMER");
                 res = mOps.cramer(mat);
+                for(int i=0;i<res.length;i++){
+                    System.out.printf("x%d = %f\n",i+1,res[i]);
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<res.length;i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(res[i]));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
+                }
             }
         }
     }
@@ -104,7 +156,7 @@ public class Driver {
             try{
                 String path = IOHandler.outputFile();
                 FileWriter fw = new FileWriter(path);
-                fw.write("Determinan dar matriks tersebut:\n");
+                fw.write("Determinan dari matriks tersebut:\n");
                 fw.write(Double.toString(res));
                 fw.close();
             }
@@ -217,19 +269,19 @@ public class Driver {
     }
 
     protected static void driverBicubic()throws IOException{
-        System.out.println("Apakah ingin memperbesar citra(1) atau melakukan interpolasi matriks(2)?");
+        Menu.menuBicubic();
         int input = IOHandler.opsi(1, 2);
         if(input==1){
             driverBonus();
         }else{
-            System.out.println("Masukkan matriks 4x4!");
+            System.out.println("MASUKKAN MATRIKS 4x4!");
             DoubleMatrix m;
             if(IOHandler.inputFile()){
                 m = new DoubleMatrix(IOHandler.fileDoubleMatrix().getMatrix());
             }else{
                 m = new DoubleMatrix(IOHandler.inputDoubleMatrix(4, 4).getMatrix());
             }
-            System.out.print("Masukkan titik X dan Y untuk diinterpolasi\n> ");
+            System.out.print("MASUKKAN TITIK X DAN Y UNTUK DIINTERPOLASI\n> ");
             double x = sc.nextDouble();
             double y = sc.nextDouble();
             DoubleMatrix func = new DoubleMatrix(16,1,BicubicInterpolation.getFunctionMatrix(m).getMatrix());
@@ -327,7 +379,7 @@ public class Driver {
     }
 
     protected static void driverBonus() throws IOException{
-        String path = sc.nextLine();
+        String path = IOHandler.outputFile();
         File file = new File(path);
         File dest = new File("D:\\zutocopy.jpg");
         try {
