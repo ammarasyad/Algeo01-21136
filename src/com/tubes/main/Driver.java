@@ -4,10 +4,16 @@ import com.tubes.persoalan.*;
 import com.tubes.algeo.*;
 import java.util.*;
 import java.io.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class Driver {
     static Scanner sc = new Scanner(System.in);
     static MatrixOperators mOps = MatrixOperators.getInstance();
+
+    protected static void printGauss(DoubleMatrix m){
+
+    }
 
     protected static void driverSPL(){
         DoubleMatrix mat;
@@ -40,20 +46,8 @@ public class Driver {
                 //SPL Gauss
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS");
                 mRes = mOps.gauss(mat);
-                DoubleMatrix.printMatrix(mRes);
                 if(IOHandler.fileOutput()){
-                    try{
-                        String path = IOHandler.outputFile();
-                        FileWriter fw = new FileWriter(path);
-                        for(int i=0;i<mRes.getRow();i++){
-                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
-                        }
-                        fw.close();
-                    }
-                    catch(IOException error){
-                        System.out.println("Error!");
-                    }
+                    //output file
                 }
             }
             case 2->{
@@ -64,51 +58,11 @@ public class Driver {
             }
             case 3->{
                 //SPL Inverse
-                DoubleMatrix mY = new DoubleMatrix(mat.getRow(),1);
-                for(int i=0;i<mat.getRow();i++){
-                    mY.setElement(i, 0, mat.getElement(i, mat.getCol()-1));
-                }
-                mRes = mOps.multiplyMatrixByMatrix(mOps.inverse(mat.getLHS()), mY);
-                System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE MATRIKS BALIKAN");
-                for(int i=0;i<mRes.getRow();i++){
-                    System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, 0));
-                }
-                if(IOHandler.fileOutput()){
-                    try{
-                        String path = IOHandler.outputFile();
-                        FileWriter fw = new FileWriter(path);
-                        for(int i=0;i<mRes.getRow();i++){
-                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
-                        }
-                        fw.close();
-                    }
-                    catch(IOException error){
-                        System.out.println("Error!");
-                    }
-                }
             }
             case 4->{
                 //SPL Cramer
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE CRAMER");
                 res = mOps.cramer(mat);
-                for(int i=0;i<res.length;i++){
-                    System.out.printf("x%d = %f\n",i+1,res[i]);
-                }
-                if(IOHandler.fileOutput()){
-                    try{
-                        String path = IOHandler.outputFile();
-                        FileWriter fw = new FileWriter(path);
-                        for(int i=0;i<res.length;i++){
-                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                            fw.write(Double.toString(res[i]));fw.write("\n");
-                        }
-                        fw.close();
-                    }
-                    catch(IOException error){
-                        System.out.println("Error!");
-                    }
-                }
             }
         }
     }
@@ -149,7 +103,7 @@ public class Driver {
             try{
                 String path = IOHandler.outputFile();
                 FileWriter fw = new FileWriter(path);
-                fw.write("Determinan dari matriks tersebut:\n");
+                fw.write("Determinan dar matriks tersebut:\n");
                 fw.write(Double.toString(res));
                 fw.close();
             }
@@ -231,29 +185,74 @@ public class Driver {
         }
         //Output file
         if(IOHandler.fileOutput()){
-            try{
-                String path = IOHandler.outputFile();
-                FileWriter fw = new FileWriter(path);Boolean x0=true;
-                fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\nf(x) = ");
-                for(int i=coeff.length-1;i>=0;i--){
-                    if(coeff[i]!=0){
-                        if(x0)x0=false;
-                        else if(coeff[i]>0&&!x0)fw.write(" + ");
-                        fw.write(Double.toString(coeff[i]));
-                        if(i!=0){
-                            fw.write("x^"+Integer.toString(i));
+            boolean done = false;
+            while(!done){
+                try{
+                    String path = IOHandler.outputFile();
+                    FileWriter fw = new FileWriter(path);Boolean x0=true;
+                    fw.write("Persamaan polinomial yang didapatkan dari interpolasi:\np(x) = ");
+                    for(int i=coeff.length-1;i>=0;i--){
+                        if(coeff[i]!=0){
+                            if(x0)x0=false;
+                            else if(coeff[i]>0&&!x0)fw.write(" + ");
+                            fw.write(Double.toString(coeff[i]));
+                            if(i!=0){
+                                fw.write("x^"+Integer.toString(i));
+                            }
                         }
                     }
+                    if(lanjut==1){
+                        fw.write("\nHasil estimasi dari f("+Double.toString(x)+"): "+Double.toString(res));
+                    }
+                    fw.close();
+                    System.out.println("Berhasil output pada "+path);
+                    done = true;
                 }
-                if(lanjut==1){
-                    fw.write("\nHasil estimasi dari f("+Double.toString(x)+"): "+Double.toString(res));
+                catch(IOException error){
+                    System.out.println("Error!");
                 }
-                fw.close();
-            }
-            catch(IOException error){
-                System.out.println("Error!");
             }
         }
+    }
+
+    protected static void driverBicubic()throws IOException{
+        System.out.println("Apakah ingin memperbesar citra(1) atau melakukan interpolasi matriks(2)?");
+        int input = IOHandler.opsi(1, 2);
+        if(input==1){
+            driverBonus();
+        }else{
+            System.out.println("Masukkan matriks 4x4!");
+            DoubleMatrix m;
+            if(IOHandler.inputFile()){
+                m = new DoubleMatrix(IOHandler.fileDoubleMatrix().getMatrix());
+            }else{
+                m = new DoubleMatrix(IOHandler.inputDoubleMatrix(4, 4).getMatrix());
+            }
+            System.out.print("Masukkan titik X dan Y untuk diinterpolasi\n> ");
+            double x = sc.nextDouble();
+            double y = sc.nextDouble();
+            DoubleMatrix func = new DoubleMatrix(16,1,BicubicInterpolation.getFunctionMatrix(m).getMatrix());
+            DoubleMatrix coeff = new DoubleMatrix(16,16,BicubicInterpolation.getCoeffMatrix().getMatrix());
+            DoubleMatrix invCoeff = new DoubleMatrix(16,16,mOps.inverse(coeff).getMatrix());
+            DoubleMatrix values = new DoubleMatrix(16,1,BicubicInterpolation.findValues(invCoeff,func).getMatrix());
+            float hasil = BicubicInterpolation.interpolation(x,y,values);
+            System.out.print("Berikut hasil interpolasi: ");
+            double potongHasil = Double.parseDouble(String.format("%.2f", (double)hasil));
+            System.out.println(potongHasil);
+            if(IOHandler.fileOutput()){
+                try{
+                    String path = IOHandler.outputFile();
+                    FileWriter fw = new FileWriter(path);
+                    fw.write("Berikut hasil interpolasi: ");
+                    fw.write(Double.toString(potongHasil));
+                    fw.close();
+                }
+                catch(IOException error){
+                    System.out.println("Error!");
+                }
+            }
+        }
+        
     }
 
     protected static void driverRegresi(){
@@ -293,31 +292,42 @@ public class Driver {
         }
         //Output File
         if(IOHandler.fileOutput()){
-            try{
-                String path = IOHandler.outputFile();
-                FileWriter fw = new FileWriter(path);
-                fw.write("Persamaan yang didapatkan:\ny = ");
-                fw.write(Double.toString(res[0]));
-                for(int i=1;i<res.length;i++){
-                    if(res[i]>0){
-                        fw.write(" + ");
+            boolean done = false;
+            while(!done){
+                try{
+                    String path = IOHandler.outputFile();
+                    FileWriter fw = new FileWriter(path);
+                    fw.write("Persamaan yang didapatkan:\ny = ");
+                    fw.write(Double.toString(res[0]));
+                    for(int i=1;i<res.length;i++){
+                        if(res[i]>0){
+                            fw.write(" + ");
+                        }
+                        else{
+                            fw.write(" - ");
+                        }
+                        fw.write(Double.toString(Math.abs(res[i])));
+                        fw.write(" x");
+                        fw.write(Integer.toString(i));
                     }
-                    else{
-                        fw.write(" - ");
+                    if(lanjut==1){
+                        fw.write("\nHasil estimasi atau taksirannya: ");
+                        fw.write(Double.toString(hasil));
                     }
-                    fw.write(Double.toString(Math.abs(res[i])));
-                    fw.write(" x^");
-                    fw.write(Integer.toString(i));
+                    fw.close();
+                    System.out.println("Berhasil output pada "+path);
+                    done = true;
                 }
-                if(lanjut==1){
-                    fw.write("\nHasil estimasi atau taksirannya: ");
-                    fw.write(Double.toString(hasil));
+                catch(IOException error){
+                    System.out.println("Error!");
                 }
-                fw.close();
-            }
-            catch(IOException error){
-                System.out.println("Error!");
             }
         }
+    }
+
+    protected static void driverBonus() throws IOException{
+        BufferedImage citra = ImageIO.read(new File("D:\\test.jpg"));
+        BufferedImage newCitra = ImageUpscale.scale(citra);
+        ImageIO.write(newCitra, "jpg", new File("D:\\copy.jpg"));
     }
 }

@@ -20,6 +20,7 @@ import java.lang.reflect.Array;
 // Motivasi dari menggunakan DoubleMatrix disebabkan oleh hasilnya yang sangat memungkinkan mendapatkan koefisien desimal
 
 public class BicubicInterpolation{
+    static int process = 1;
     static MatrixOperators mOps = MatrixOperators.getInstance();
     static Scanner inp = new Scanner(System.in);
     // BufferedImage bimage;
@@ -27,13 +28,6 @@ public class BicubicInterpolation{
     // int targetHeight;
 
     public static void START()throws IOException{
-        System.out.println("Apakah ingin memperbesar citra(1) atau interpolasi menggunakan matrix(2)?");
-        int input = IOHandler.opsi(1, 2);
-        if(input==1){
-            solve();
-        }else{
-            matrixInterpolation();
-        }
         //DoubleMatrix destImage = new DoubleMatrix(height*2, width*2);
         // DoubleMatrix paddedMatrix = new DoubleMatrix(nearestNeighbour(m).getMatrix());
         // DoubleMatrix.printMatrix(paddedMatrix);
@@ -52,37 +46,14 @@ public class BicubicInterpolation{
         // DoubleMatrix.printMatrix(testhasil);
     }
     
-    public static void matrixInterpolation(){
-        System.out.println("MASUKKAN MATRIKS 4x4!");
-        DoubleMatrix m;
-        if(IOHandler.inputFile()){
-            m = new DoubleMatrix(IOHandler.fileDoubleMatrix().getMatrix());
-        }else{
-            m = new DoubleMatrix(IOHandler.inputDoubleMatrix(4, 4).getMatrix());
-        }
-        System.out.print("MASUKKAN X DAN Y UNTUK DIINTERPOLASI\n> ");
-        double x = inp.nextDouble();
-        double y = inp.nextDouble();
+    public static double matrixInterpolation(double x,double y,DoubleMatrix m){
         DoubleMatrix func = new DoubleMatrix(16,1,getFunctionMatrix(m).getMatrix());
         DoubleMatrix coeff = new DoubleMatrix(16,16,getCoeffMatrix().getMatrix());
         DoubleMatrix invCoeff = new DoubleMatrix(16,16,mOps.inverse(coeff).getMatrix());
         DoubleMatrix values = new DoubleMatrix(16,1,findValues(invCoeff,func).getMatrix());
         float hasil = interpolation(x,y,values);
-        System.out.print("Berikut hasil interpolasi: ");
         double potongHasil = Double.parseDouble(String.format("%.2f", (double)hasil));
-        System.out.println(potongHasil);
-        if(IOHandler.fileOutput()){
-            try{
-                String path = IOHandler.outputFile();
-                FileWriter fw = new FileWriter(path);
-                fw.write("Berikut hasil interpolasi: ");
-                fw.write(Double.toString(potongHasil));
-                fw.close();
-            }
-            catch(IOException error){
-                System.out.println("Error!");
-            }
-        }
+        return potongHasil;
     }
 
     /**
@@ -160,8 +131,10 @@ public class BicubicInterpolation{
         int k=0;
         for(int i=0;i<4;i++){
             for(int j=0;j<4;j++){
+                //System.out.println(process);
                 sum+= m.getElement(k,0)*Math.pow(x,i)*Math.pow(y,j);
                 k++;
+                //process++;
             }
         }
         return sum;

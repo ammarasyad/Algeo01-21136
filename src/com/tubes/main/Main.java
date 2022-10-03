@@ -24,7 +24,7 @@ public class Main extends Menu{
                 }
                 case 5 -> {
                     try {
-                        BicubicInterpolation.START();
+                        Driver.driverBicubic();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
