@@ -1,6 +1,5 @@
 package com.tubes.algeo;
 
-
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;

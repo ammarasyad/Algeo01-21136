@@ -1,6 +1,5 @@
 package com.tubes.algeo;
 
-
 import java.text.DecimalFormat;
 
 public class ParametricSolver {

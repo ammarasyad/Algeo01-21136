@@ -1,7 +1,9 @@
 package com.tubes.persoalan;
 
-import com.tubes.algeo.*;
 import java.util.Scanner;
+
+import com.tubes.algeo.DoubleMatrix;
+import com.tubes.algeo.MatrixOperators;
 
 public class InterpolasiPolinomial{
     static Scanner sc = new Scanner(System.in);

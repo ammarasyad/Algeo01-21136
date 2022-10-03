@@ -1,6 +1,5 @@
 package com.tubes.main;
 
-
 import com.tubes.persoalan.*;
 import com.tubes.algeo.*;
 import java.util.*;
@@ -43,59 +42,31 @@ public class Driver {
                 //SPL Gauss [BELUM KELAR]
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS");
                 mRes = mOps.gauss(mat);
-                if(MatrixType.getMatrixType(mRes)==MatrixType.INFINITE){
-                    if(IOHandler.fileOutput()){
-                        try{
-                            String path = IOHandler.outputFile();
-                            FileWriter fw = new FileWriter(path);
-                            //cetak hasil parametric
-                            fw.close();
-                        }
-                        catch(IOException error){
-                            System.out.println("Error!");
-                        }
+                DoubleMatrix.printMatrix(mRes);
+                int size = Math.min(mRes.getRow(), mRes.getCol());
+                double[] constants = mRes.getConstants();
+                res = new double[size];
+                for (int i = size - 1; i >= 0; i--) {
+                    res[i] = constants[i];
+                    for (int j = i - 1; j >= 0; j--) {
+                        constants[j] -= res[i] * mRes.getElement(j, i);
                     }
                 }
-                else if (MatrixType.getMatrixType(mRes)==MatrixType.NO_SOLUTIONS){
-                    if(IOHandler.fileOutput()){
-                        try{
-                            String path = IOHandler.outputFile();
-                            FileWriter fw = new FileWriter(path);
-                            fw.write("Tidak ada solusi.");
-                            fw.close();
-                        }
-                        catch(IOException error){
-                            System.out.println("Error!");
-                        }
-                    }
+                for(int i=0;i<res.length;i++){
+                    System.out.printf("x%d = %f\n",i+1,res[i]);
                 }
-                else{
-                    DoubleMatrix.printMatrix(mRes);
-                    int size = Math.min(mRes.getRow(), mRes.getCol());
-                    double[] constants = mRes.getConstants();
-                    res = new double[size];
-                    for (int i = size - 1; i >= 0; i--) {
-                        res[i] = constants[i];
-                        for (int j = i - 1; j >= 0; j--) {
-                            constants[j] -= res[i] * mRes.getElement(j, i);
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(res[i]));fw.write("\n");
                         }
+                        fw.close();
                     }
-                    for(int i=0;i<res.length;i++){
-                        System.out.printf("x%d = %f\n",i+1,res[i]);
-                    }
-                    if(IOHandler.fileOutput()){
-                        try{
-                            String path = IOHandler.outputFile();
-                            FileWriter fw = new FileWriter(path);
-                            for(int i=0;i<mRes.getRow();i++){
-                                fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                                fw.write(Double.toString(res[i]));fw.write("\n");
-                            }
-                            fw.close();
-                        }
-                        catch(IOException error){
-                            System.out.println("Error!");
-                        }
+                    catch(IOException error){
+                        System.out.println("Error!");
                     }
                 }
             }
@@ -103,23 +74,21 @@ public class Driver {
                 //SPL Gauss-Jordan
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS-JORDAN");
                 mRes = mOps.gaussJordan(mat);
-                if(mRes!=null){
-                    for(int i=0;i<mRes.getRow();i++){
-                        System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, mRes.getCol()-1));
+                for(int i=0;i<mRes.getRow();i++){
+                    System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, mRes.getCol()-1));
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, mRes.getCol()-1)));fw.write("\n");
+                        }
+                        fw.close();
                     }
-                    if(IOHandler.fileOutput()){
-                        try{
-                            String path = IOHandler.outputFile();
-                            FileWriter fw = new FileWriter(path);
-                            for(int i=0;i<mRes.getRow();i++){
-                                fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                                fw.write(Double.toString(mRes.getElement(i, mRes.getCol()-1)));fw.write("\n");
-                            }
-                            fw.close();
-                        }
-                        catch(IOException error){
-                            System.out.println("Error!");
-                        }
+                    catch(IOException error){
+                        System.out.println("Error!");
                     }
                 }
             }
@@ -153,27 +122,21 @@ public class Driver {
                 //SPL Cramer
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN KAIDAH CRAMER");
                 res = mOps.cramer(mat);
-                if(res==null){
-                    System.out.println("Tidak ada solusi unik.");
-                    System.out.println("Coba gunakan metode eliminasi gauss.");
+                for(int i=0;i<res.length;i++){
+                    System.out.printf("x%d = %f\n",i+1,res[i]);
                 }
-                else{
-                    for(int i=0;i<res.length;i++){
-                        System.out.printf("x%d = %f\n",i+1,res[i]);
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<res.length;i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(res[i]));fw.write("\n");
+                        }
+                        fw.close();
                     }
-                    if(IOHandler.fileOutput()){
-                        try{
-                            String path = IOHandler.outputFile();
-                            FileWriter fw = new FileWriter(path);
-                            for(int i=0;i<res.length;i++){
-                                fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                                fw.write(Double.toString(res[i]));fw.write("\n");
-                            }
-                            fw.close();
-                        }
-                        catch(IOException error){
-                            System.out.println("Error!");
-                        }
+                    catch(IOException error){
+                        System.out.println("Error!");
                     }
                 }
             }

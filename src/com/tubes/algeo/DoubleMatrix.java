@@ -1,6 +1,5 @@
 package com.tubes.algeo;
 
-
 import java.util.List;
 
 public class DoubleMatrix extends Matrix<Double> {

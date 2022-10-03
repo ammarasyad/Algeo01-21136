@@ -1,6 +1,7 @@
 package com.tubes.persoalan;
 
-import com.tubes.algeo.*;
+import com.tubes.algeo.DoubleMatrix;
+import com.tubes.algeo.MatrixOperators;
 
 public class RegresiLinier {
     static MatrixOperators mOps = MatrixOperators.getInstance();
