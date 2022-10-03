@@ -383,7 +383,6 @@ public class Driver {
         String destination = "./test/output/"+path;
         path = "./test/"+path;
         File dest = new File(destination);
-        System.out.println(dest.getAbsolutePath());
         try {
             //BufferedImage srcImage = ImageIO.read(new File(path));
             BufferedImage srcImage = ImageIO.read(new File(path));
