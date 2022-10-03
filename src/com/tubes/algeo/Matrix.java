@@ -124,6 +124,14 @@ public class Matrix<T> {
         return copy;
     }
 
+    public T[] getColElements(int col) {
+        T[] copy = (T[]) Array.newInstance(Double.class, getRow());
+        for (int i = 0; i < getRow(); i++) {
+            copy[i] = getElement(i, col);
+        }
+        return copy;
+    }
+
     public void setElement(int row, int col, T element) {
         this.getMatrix().get(row).set(col, element);
     }

@@ -8,16 +8,18 @@ public class ParametricSolver {
         String[] result = new String[matrix.getCol() - 1];
         int count = 0;
         int[] idx = new int[result.length];
-        for (int i = 0; i < matrix.getCol() - 1 && i < matrix.getRow() - 1; i++) {
-            if ((Double) matrix.getElement(i, i) == 1D) {
-                idx[count] = i;
-                count++;
+        for (int i = 0; i < matrix.getRow(); i++) {
+            for (int j = 1; j < matrix.getCol(); j++) {
+                if ((double) matrix.getElement(i, j) == 1D && (double) matrix.getElement(i, j - 1) == 0D) {
+                    idx[count] = j;
+                    count++;
+                }
             }
         }
         for (int i = matrix.getLHS().getCol() - 1; i >= 0; i--) {
             StringBuilder temp = new StringBuilder();
             int index = Math.min(i, matrix.getRow() - 1);
-            if ((Double) matrix.getElement(index, index) == 1D) {
+            if ((double) matrix.getElement(index, index) == 1D) {
                 temp.append("x").append(i + 1).append(" = ").append(df.format(matrix.getElement(index, matrix.getCol() - 1)));
                 for (int j = i + 1; j < result.length; j++) {
                     double x = (double) matrix.getElement(i, j);
@@ -47,6 +49,6 @@ public class ParametricSolver {
                 return res;
             }
         }
-        return 't';
+        return res;
     }
 }

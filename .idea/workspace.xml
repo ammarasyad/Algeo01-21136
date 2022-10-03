@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="cfee54d9-5ed8-46a5-8687-30bc19736135" name="Changes" comment="feat: bicubic interpolation" />
+    <list default="true" id="cfee54d9-5ed8-46a5-8687-30bc19736135" name="Changes" comment="feat/fix!: Reworked Gaussian Elimination">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/Matrix.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixOperators.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixOperators.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixType.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/tubes/algeo/MatrixType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/Matrix.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/Matrix.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixOperators.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixOperators.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/MatrixType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,16 +31,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Kuliah/AlGeo/Tubes/Algeo01-21136&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/Kuliah/AlGeo/Tubes/Algeo01-21136",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.tubes.algeo.TestDrive" />
+      <module name="Algeo" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="Algeo01-21136" />
       <method v="2">
@@ -76,6 +96,11 @@
             <State />
           </value>
         </entry>
+        <entry key="f15ddc5e-5bf0-42cc-81ec-05e5c2813164">
+          <value>
+            <State />
+          </value>
+        </entry>
       </map>
     </option>
   </component>
@@ -83,5 +108,23 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="feat: bicubic interpolation" />
     <option name="LAST_COMMIT_MESSAGE" value="feat: bicubic interpolation" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/com/tubes/algeo/ParametricSolver.java</url>
+          <line>5</line>
+          <properties class="com.tubes.algeo.ParametricSolver" method="solve">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="57" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Algeo$Test.ic" NAME="Test Coverage Results" MODIFIED="1664278646386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

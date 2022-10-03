@@ -1,10 +1,7 @@
 package com.tubes.algeo;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class MatrixOperators {
@@ -130,8 +127,9 @@ public final class MatrixOperators {
                     }
                 }
                 for (int i = 0; i < copy.getRow(); i++) {
-                    result *= Math.pow(-1, switchCount) * copy.getElement(i, i);
+                    result *= copy.getElement(i, i);
                 }
+                result *= Math.pow(-1, switchCount);
             }
             case COFACTOR_EXPANSION -> {
                 if (copy.getRow() >= 10) { // God save your soul.
@@ -284,45 +282,53 @@ public final class MatrixOperators {
     /**
      * Apply Gaussian Elimination to create an augmented matrix in a row echelon form. Ax = B, the rightmost column is B.
      *
-     * @param m Matrix of integer elements.
-     * @return Row echelon matrix. Returns the matrix itself if the matrix is a square.
+     * @param matrix Matrix of numerical elements.
+     * @return Row echelon matrix. Returns null if the matrix is a square.
      */
-    public DoubleMatrix gauss(Matrix<? extends Number> m) {
-        DoubleMatrix copy = Matrix.convertToDouble(m);
-        if (m.getRow() == m.getCol()) {
-            System.out.println("Matrix is a square. Cannot continue.");
-            return null;
-        }
-        return gauss(copy.getLHS(), copy.getConstants());
-    }
-
-    private DoubleMatrix gauss(Matrix<Double> result, double[] constants) {
+    public DoubleMatrix gauss(Matrix<? extends Number> matrix) {
         DecimalFormat df = new DecimalFormat("###.##");
-        int size = Math.min(result.getRow(), result.getCol());
-//        int size = result.getRow();
-        for (int i = 0; i < size; i++) {
-            for (int j = i + 1; j < size; j++) {
-                result.setElement(i, j, result.getElement(i, j) / result.getElement(i, i));
+        DoubleMatrix copy = Matrix.convertToDouble(matrix);
+        final int rows = copy.getRow();
+        final int cols = copy.getCol();
+        int pivot = 0;
+        int iteration = Math.min(rows, cols - 1);
+        for (int i = 0; i < iteration; i++) {
+            if (pivot == cols - 1) break;
+            while (Arrays.stream(copy.getColElements(pivot)).allMatch(a -> a == 0) && pivot < cols) {
+                pivot++;
             }
 
-            constants[i] /= result.getElement(i, i);
-            result.setElement(i, i, 1D);
+            if (copy.getElement(i, pivot) == 0) {
+                for (int j = i + 1; j < rows; j++) {
+                    if (copy.getElement(j, pivot) != 0) {
+                        Collections.swap(copy.getMatrix(), i, j);
+                        break;
+                    }
+                }
+            }
 
-            for (int j = i + 1; j < size; j++) {
-                double x = result.getElement(j, i) / result.getElement(i, i);
-                constants[j] -= x * constants[i];
-                result.setRowElements(j, rowApply(result.getRowElements(j), rowApply(result.getRowElements(i), x, (a, b) -> a * b), (p, q) -> p - q));
+            if (copy.getElement(i, pivot) == 0) continue;
+            copy.setRowElements(i, rowApply(copy.getRowElements(i), copy.getElement(i, pivot), (p, q) -> p / q));
+
+            for (int j = i + 1; j < rows; j++) {
+                if ((j == i && cols > rows) || copy.getElement(i, pivot) == 0) continue;
+                double x = copy.getElement(j, pivot);
+                copy.setRowElements(j, rowApply(copy.getRowElements(j), rowApply(copy.getRowElements(i), x, (p, q) -> p * q), (a, b) -> a - b));
+            }
+            pivot++;
+        }
+
+        for (int i = 0; i < copy.getRow(); i++) {
+            for (int j = 0; j < copy.getCol(); j++) {
+                copy.setElement(i, j, Double.parseDouble(df.format(copy.getElement(i, j))));
             }
         }
-        for (int i = 0; i < size; i++) {
-            result.getMatrix().get(i).add(constants[i]);
-        }
 
-        switch (MatrixType.getMatrixType(result)) {
+        switch (MatrixType.getMatrixType(copy)) {
             case INFINITE -> {
-                String[] res = ParametricSolver.solve(result);
-                for (String re : res) {
-                    System.out.println(re);
+                String[] result = ParametricSolver.solve(copy);
+                for (String e : result) {
+                    System.out.println(e);
                 }
                 return null;
             }
@@ -331,14 +337,7 @@ public final class MatrixOperators {
                 return null;
             }
         }
-
-        for (int i = 0; i < result.getRow(); i++) {
-            for (int j = 0; j < result.getCol(); j++) {
-                result.setElement(i, j, Double.parseDouble(df.format(result.getElement(i, j))));
-            }
-        }
-
-        return new DoubleMatrix(result.getMatrix());
+        return copy;
     }
 
     /**
@@ -411,5 +410,17 @@ public final class MatrixOperators {
         }
         count = 0;
         return m;
+    }
+
+    private void swapCol(Matrix<Double> matrix, int col, int pivot) {
+        ArrayList<Double> array = new ArrayList<>();
+        for (int i = 0; i < matrix.getRow(); i++) {
+            array.add(matrix.getElement(i, col));
+        }
+
+        for (int i = 0; i < matrix.getRow(); i++) {
+            matrix.setElement(i, col, matrix.getElement(i, pivot));
+            matrix.setElement(i, pivot, array.get(i));
+        }
     }
 }
