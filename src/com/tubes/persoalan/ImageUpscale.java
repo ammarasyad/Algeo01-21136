@@ -2,6 +2,7 @@ package com.tubes.persoalan;
 import java.awt.image.BufferedImage;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
+import java.awt.Color;
 
 public class ImageUpscale {
     static MatrixOperators mOps = MatrixOperators.getInstance();
@@ -20,10 +21,12 @@ public class ImageUpscale {
             for(int j = 0; j < destHeight; j++){
                 DoubleMatrix func = new DoubleMatrix(getRGBFunc((int)(j*0.5), (int)(i*0.5),src).getMatrix());
                 DoubleMatrix values = new DoubleMatrix(BicubicInterpolation.findValues(invCoeff,func).getMatrix());
-                arrayRGB[i*destWidth + j] = (int)BicubicInterpolation.interpolation(2, 2, values);
+                arrayRGB[i*destWidth + j] = (int)BicubicInterpolation.interpolation(0, 0, values);
                 
             }
         }
+        BufferedImage result = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+        result.setRGB(0, 0, destWidth, destHeight, arrayRGB, 0, destWidth);
         return arrayRGB;
     }
 

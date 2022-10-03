@@ -9,6 +9,13 @@ public class BicubicInterpolation{
     static MatrixOperators mOps = MatrixOperators.getInstance();
     static Scanner inp = new Scanner(System.in);
     
+    /**
+     * Mendapatkan hasil interpolasi dalam satu fungsi
+     * @param x titik x yang akan diinterpolasi
+     * @param y titik y yang akan diinterpolasi
+     * @param m sumber matriks
+     * @return hasil interpolasi
+     */
     public static double matrixInterpolation(double x,double y,DoubleMatrix m){
         DoubleMatrix func = new DoubleMatrix(16,1,getFunctionMatrix(m).getMatrix());
         DoubleMatrix coeff = new DoubleMatrix(16,16,getCoeffMatrix().getMatrix());

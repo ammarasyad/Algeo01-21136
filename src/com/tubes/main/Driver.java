@@ -6,6 +6,8 @@ import java.util.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 public class Driver {
@@ -379,12 +381,13 @@ public class Driver {
     }
 
     protected static void driverBonus() throws IOException{
+        //Test
+        //File file = new File("D:\\test.jpg");
         String path = IOHandler.outputFile();
-        File file = new File(path);
-        File dest = new File("D:\\zutocopy.jpg");
+        File dest = new File("./test/output/copy.jpg");
         try {
-            //BufferedImage srcImage = ImageIO.read(new File(path));
-            BufferedImage srcImage = ImageIO.read(new File("D:\\zutomayo.jpg"));
+            File file = new File(path);
+            BufferedImage srcImage = ImageIO.read(file);
             int[] data = ImageUpscale.getNewRGB(srcImage);
             BufferedImage destImage= new BufferedImage(srcImage.getWidth()*2,srcImage.getHeight()*2,BufferedImage.TYPE_INT_RGB);
             destImage.setRGB(0, 0, srcImage.getWidth()*2, srcImage.getHeight()*2, data, 0, srcImage.getWidth()*2);
