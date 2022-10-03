@@ -2,7 +2,6 @@ package com.tubes.persoalan;
 import java.awt.image.BufferedImage;
 import com.tubes.algeo.DoubleMatrix;
 import com.tubes.algeo.MatrixOperators;
-import java.awt.Color;
 
 public class ImageUpscale {
     static MatrixOperators mOps = MatrixOperators.getInstance();
