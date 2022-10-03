@@ -6,7 +6,6 @@ import java.util.*;
 import java.io.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.MemoryCacheImageInputStream;
 
 public class Driver {
     static Scanner sc = new Scanner(System.in);
@@ -379,17 +378,20 @@ public class Driver {
     }
 
     protected static void driverBonus() throws IOException{
-        String path = IOHandler.outputFile();
-        File file = new File(path);
-        File dest = new File("D:\\zutocopy.jpg");
+        System.out.print("MASUKKAN NAMA FILE\n> ");
+        String path = sc.next();
+        String destination = "./test/output/"+path;
+        path = "./test/"+path;
+        File dest = new File(destination);
+        System.out.println(dest.getAbsolutePath());
         try {
             //BufferedImage srcImage = ImageIO.read(new File(path));
-            BufferedImage srcImage = ImageIO.read(new File("D:\\zutomayo.jpg"));
+            BufferedImage srcImage = ImageIO.read(new File(path));
+            System.out.println("Sedang mengupscale...");
             int[] data = ImageUpscale.getNewRGB(srcImage);
             BufferedImage destImage= new BufferedImage(srcImage.getWidth()*2,srcImage.getHeight()*2,BufferedImage.TYPE_INT_RGB);
             destImage.setRGB(0, 0, srcImage.getWidth()*2, srcImage.getHeight()*2, data, 0, srcImage.getWidth()*2);
             ImageIO.write(destImage, "jpg", dest);
-
         } catch (IOException e) {
               System.out.println("Exception occured :" + e.getMessage());
         }
