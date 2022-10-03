@@ -1,7 +1,6 @@
 package com.tubes.main;
 
 import java.io.IOException;
-import com.tubes.persoalan.BicubicInterpolation;
 
 public class Main extends Menu{
     public static void main(String[] args){
