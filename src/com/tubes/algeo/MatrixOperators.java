@@ -333,7 +333,7 @@ public final class MatrixOperators {
                 return null;
             }
             case NO_SOLUTIONS -> {
-                System.out.println("Matrix has no solutions.");
+                System.out.println("Tidak ada solusi.");
                 return null;
             }
         }
@@ -362,7 +362,7 @@ public final class MatrixOperators {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length + 1; j++) {
                 if (Double.isNaN(finalized.getElement(i, j)) || Double.isInfinite(finalized.getElement(i, j))) {
-                    System.out.println("Matrix does not have a unique solution.");
+                    System.out.println("Tidak ada solusi unik.");
                     return null;
                 }
                 if (Math.abs(finalized.getElement(i, j)) < EPSILON) {
