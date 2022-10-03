@@ -1,5 +1,6 @@
 package com.tubes.main;
 
+
 public class Menu {
 
     protected static void identitas(){

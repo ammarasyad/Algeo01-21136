@@ -31,6 +31,10 @@ Tugas Besar ini meliputi beberapa fitur:
     <li> Visual Studio Code dan IntelliJ IDEA
 </ul>
 
+## Cara Menjalankan Program
+1. Arahkan terminal ke folder bin
+2. Input `java -jar Main.jar` pada terminal
+
 ## Anggota
 <table>
     <tr>

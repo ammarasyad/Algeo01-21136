@@ -1,5 +1,6 @@
 package com.tubes.algeo;
 
+
 import java.util.List;
 
 public class IntegerMatrix extends Matrix<Integer> {
