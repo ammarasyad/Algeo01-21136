@@ -11,10 +11,6 @@ public class Driver {
     static Scanner sc = new Scanner(System.in);
     static MatrixOperators mOps = MatrixOperators.getInstance();
 
-    protected static void printGauss(DoubleMatrix m){
-
-    }
-
     protected static void driverSPL(){
         DoubleMatrix mat;
         if(IOHandler.inputFile()){
@@ -43,17 +39,29 @@ public class Driver {
         int pilihan = IOHandler.opsi(1,4);
         switch(pilihan){
             case 1->{
-                //SPL Gauss
+                //SPL Gauss [BELUM KELAR]
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS");
                 mRes = mOps.gauss(mat);
                 DoubleMatrix.printMatrix(mRes);
+                int size = Math.min(mRes.getRow(), mRes.getCol());
+                double[] constants = mRes.getConstants();
+                res = new double[size];
+                for (int i = size - 1; i >= 0; i--) {
+                    res[i] = constants[i];
+                    for (int j = i - 1; j >= 0; j--) {
+                        constants[j] -= res[i] * mRes.getElement(j, i);
+                    }
+                }
+                for(int i=0;i<res.length;i++){
+                    System.out.printf("x%d = %f\n",i+1,res[i]);
+                }
                 if(IOHandler.fileOutput()){
                     try{
                         String path = IOHandler.outputFile();
                         FileWriter fw = new FileWriter(path);
                         for(int i=0;i<mRes.getRow();i++){
                             fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
-                            fw.write(Double.toString(mRes.getElement(i, 0)));fw.write("\n");
+                            fw.write(Double.toString(res[i]));fw.write("\n");
                         }
                         fw.close();
                     }
@@ -66,7 +74,23 @@ public class Driver {
                 //SPL Gauss-Jordan
                 System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE GAUSS-JORDAN");
                 mRes = mOps.gaussJordan(mat);
-                DoubleMatrix.printMatrix(mRes);
+                for(int i=0;i<mRes.getRow();i++){
+                    System.out.printf("x%d = %f\n",i+1,mRes.getElement(i, mRes.getCol()-1));
+                }
+                if(IOHandler.fileOutput()){
+                    try{
+                        String path = IOHandler.outputFile();
+                        FileWriter fw = new FileWriter(path);
+                        for(int i=0;i<mRes.getRow();i++){
+                            fw.write("x");fw.write(Integer.toString(i+1));fw.write(" = ");
+                            fw.write(Double.toString(mRes.getElement(i, mRes.getCol()-1)));fw.write("\n");
+                        }
+                        fw.close();
+                    }
+                    catch(IOException error){
+                        System.out.println("Error!");
+                    }
+                }
             }
             case 3->{
                 //SPL Inverse
@@ -96,7 +120,7 @@ public class Driver {
             }
             case 4->{
                 //SPL Cramer
-                System.out.println("HASIL DARI SPL TERSEBUT DENGAN METODE CRAMER");
+                System.out.println("HASIL DARI SPL TERSEBUT DENGAN KAIDAH CRAMER");
                 res = mOps.cramer(mat);
                 for(int i=0;i<res.length;i++){
                     System.out.printf("x%d = %f\n",i+1,res[i]);
